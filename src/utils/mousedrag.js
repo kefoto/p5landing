@@ -1,10 +1,10 @@
 import { Tile } from "./Tile";
 
-let tilesX = 40; // Grid columns
-let tilesY = 20; // Grid rows
-const collisionRadius = 250;
+let tilesX = 20; // Grid columns
+let tilesY = 72; // Grid rows
+const collisionRadius = 100;
 const friction = 0.8;
-const ease = 0.05;
+const ease = 0.25;
 let tiles = [];
 
 const mousedrag = (p) => {
@@ -29,6 +29,10 @@ const mousedrag = (p) => {
 
     // p.frameRate(30);
 
+    prevMouseX = p.mouseX;
+    prevMouseY = p.mouseY;
+
+
     let tileW = p.int(p.width / tilesX);
     let tileH = p.int(p.height / tilesY);
 
@@ -44,8 +48,16 @@ const mousedrag = (p) => {
   p.draw = () => {
     p.background(255);
 
+    let moveX = p.mouseX - prevMouseX;
+    let moveY = p.mouseY - prevMouseY;
+
+    prevMouseX = p.mouseX;
+    prevMouseY = p.mouseY;
+
     tiles.forEach((tile) => {
-      tile.update(p.mouseX, p.mouseY, collisionRadius, friction, ease);
+      // tile.update(p.mouseX, p.mouseY, collisionRadius, friction, ease);
+
+      tile.update2(moveX, moveY, p.mouseX, p.mouseY, collisionRadius, friction, ease);
 
       p.copy(
         pg,
