@@ -13,6 +13,7 @@ export class Tile {
     this.force = 0;
     this.angle = 0;
     this.origin = { x: x * w, y: y * h };
+    this.originalOrigin = { ...this.origin};
     this.delta = { x: 0, y: 0 };
   }
 
@@ -58,9 +59,40 @@ export class Tile {
       .map((val, index) => val + [a, b, c, d, e, f, g, h][index]);
   }
 
+  changeOrigin(targetX, targetY) {
+    this.origin.x = targetX;
+    this.origin.y = targetY;
+  }
+
+  resetOrigin() {
+    this.origin.x = this.originalOrigin.x;
+    this.origin.y = this.originalOrigin.y;
+  }
+
+  moveTo(targetX, targetY) {
+  
+    let deltaX = targetX - this.sx;
+    let deltaY = targetY - this.sy;
+
+    // Apply easing to move towards the target position smoothly
+    this.vx += -deltaX;
+    this.vy += -deltaY;
+
+    // Optionally, you can also update the destination position (dx, dy)
+    // this.dx += deltaX;
+    // this.dy += deltaY;
+  }
+
   warp(width, height) {
-    this.x = Math.random() * width;
-    this.y = Math.random() * height;
-    // this.ease = 0.05
+    
+    this.vx = Math.random() * 2 * width - width;
+    this.vy = Math.random() * 2 * height - height;
+
+    // this.dx = Math.random() * width;
+    // this.dy = Math.random() * height;
+
+    // console.log(this.vx)
+    // console.log(this.vy)
+    // this.ease = 0.01
   }
 }
