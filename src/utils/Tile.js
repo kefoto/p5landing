@@ -21,8 +21,8 @@ export class Tile {
     this.delta.y = mouseY - this.sy;
 
     let distance = Math.sqrt(this.delta.x ** 2 + this.delta.y ** 2);
-    this.force = (-0.6 * radius) / distance;
-    // this.force = (-1) *  (distance - radius) / distance;
+    // this.force = (1) * (radius - distance) / radius;
+    this.force = (-0.6) *  (radius) / distance;
 
     if (distance < radius) {
       this.angle = Math.atan2(this.delta.y, this.delta.x);
@@ -49,8 +49,13 @@ export class Tile {
 
     this.sx += (this.vx *= friction) + (this.origin.x - this.sx) * ease;
     this.sy += (this.vy *= friction) + (this.origin.y - this.sy) * ease;
+  }
 
-
+  wave([a, b, c, d, e, f, g, h]) {
+    // Adjust properties using array values
+    [this.sx, this.sy, this.sw, this.sh, this.dx, this.dy, this.dw, this.dh] = 
+      [this.sx, this.sy, this.sw, this.sh, this.dx, this.dy, this.dw, this.dh]
+      .map((val, index) => val + [a, b, c, d, e, f, g, h][index]);
   }
 
   warp(width, height) {

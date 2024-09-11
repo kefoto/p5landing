@@ -2,9 +2,9 @@ import { Tile } from "./Tile";
 
 let tilesX = 20; // Grid columns
 let tilesY = 72; // Grid rows
-const collisionRadius = 100;
+const collisionRadius = 70;
 const friction = 0.8;
-const ease = 0.25;
+const ease = 0.15;
 let tiles = [];
 
 const mousedrag = (p) => {
@@ -25,7 +25,7 @@ const mousedrag = (p) => {
     pg.push();
     pg.translate(p.width / 2, p.height / 2);
     pg.textAlign(p.CENTER, p.CENTER);
-    pg.text("hello", 0, 0);
+    pg.text("yo", 0, 0);
 
     // p.frameRate(30);
 
@@ -54,11 +54,15 @@ const mousedrag = (p) => {
     prevMouseX = p.mouseX;
     prevMouseY = p.mouseY;
 
-    tiles.forEach((tile) => {
-      // tile.update(p.mouseX, p.mouseY, collisionRadius, friction, ease);
 
+    tiles.forEach((tile) => {
+      tile.update(p.mouseX, p.mouseY, collisionRadius, friction, ease);
       tile.update2(moveX, moveY, p.mouseX, p.mouseY, collisionRadius, friction, ease);
 
+      // let dis = p.dist(p.width / 2, p.height / 2, tile.dx, tile.dy);
+      // let w = p.int(p.sin(p.frameCount * 0.04 + dis * 0.0015) * 15)
+      // let w2 = p.int(p.cos(p.frameCount * 0.02 +  dis * 0.02) * 17)
+      // tile.wave([w - w2, w2 - w, 0, 0, 0, 0, 0, 0]);
       p.copy(
         pg,
         tile.sx,
