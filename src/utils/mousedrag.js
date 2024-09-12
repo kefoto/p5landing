@@ -25,14 +25,17 @@ const mousedrag = (p) => {
 
     pg.background(255);
     pg.fill(0);
-    pg.textSize(canvasSize / 4);
-    pg.push();
+    // pg.textSize(canvasSize / 4);
+    // pg.push();
     // pg.translate(p.width / 2, p.height / 2);
     // pg.textAlign(p.CENTER, p.CENTER);
-    // pg.scale(1, 1.2);
+    // pg.scale(1, 2);
     // pg.text("hello", 0, 0);
 
+    
     pg.image(p.img, 0, 0);
+    // pg.translate(p.width / 2, p.height / 2);
+    // pg.push();
 
     // p.frameRate(30);
 

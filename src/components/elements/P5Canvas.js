@@ -1,7 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import p5 from 'p5';
 
-const P5Wrapper = ({ sketch }) => {
+//TODO: should I create my own mouse hooK?
+const P5Canvas = ({ sketch }) => {
   const canvasRef = useRef();
 
   useEffect(() => {
@@ -15,4 +16,4 @@ const P5Wrapper = ({ sketch }) => {
   return <div ref={canvasRef}></div>;
 };
 
-export default P5Wrapper;
+export default P5Canvas;
