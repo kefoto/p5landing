@@ -1,7 +1,7 @@
-import { IconButton, Slider } from "@mui/material";
-import React, {useState} from "react";
-import ExpandLessOutlinedIcon from "@mui/icons-material/ExpandLessOutlined";
+import { Slider } from "@mui/material";
+import React from "react";
 import CollapsibleSection from "../components/elements/CollapsibleSection";
+import WaveSection from "../components/elements/WaveSection";
 /**
  * fundamental updates after change, 
  * but waves updates after submit,
@@ -95,16 +95,34 @@ const inputSectionMap = {
       },
     },
   ],
-  waves: [],
+  waves: [
+    {
+      title: "Waves",
+      type: "wave",
+      // passdown an array of variables
+      props: {
+        name: "waveArr",
+        min: 0,
+        max: 1,
+        step: 0.01,
+      },
+    },
+  ],
 };
 
 const Setting = ({ formData, onFormDataChange }) => {
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     onFormDataChange({
       ...formData,
       [name]: value,
+    });
+  };
+
+  const handleWaveSubmit = (waveArr) => {
+    onFormDataChange({
+      ...formData,
+      waveArr,  // Update the wave array in the formData after submit
     });
   };
 
@@ -124,39 +142,52 @@ const Setting = ({ formData, onFormDataChange }) => {
         );
       case "dSlider":
         return (
-          <div
-            key={input.title}
-            className="relative w-full flex justify-between text-left mb-2 px-2.5"
-          >
-            <label className="pr-8">{input.title}</label>
-            {input.props.map((prop) => (
-              <Slider
-                key={prop.name}
-                size="small"
-                valueLabelDisplay="auto"
-                onChange={handleInputChange}
-                value={formData[prop.name] ?? prop.min}
-                {...prop}
-              />
-            ))}
-          </div>
+          <>
+            <div id="gutter" className="relative w-full flex pt-1.5"></div>
+            <div
+              key={input.title}
+              className="relative w-full flex justify-between text-left px-2.5"
+            >
+              <label className="pr-8">{input.title}</label>
+              {/* <div className="justify-between "> */}
+                {input.props.map((prop) => (
+                  <Slider
+                    key={prop.name}
+                    size="small"
+                    valueLabelDisplay="auto"
+                    onChange={handleInputChange}
+                    value={formData[prop.name] ?? prop.min}
+                    {...prop}
+                  />
+                ))}
+              {/* </div> */}
+            </div>
+          </>
         );
 
       case "slider":
         return (
-          <div
-            key={input.title}
-            className="relative w-full flex justify-between text-left mb-2 px-2.5"
-          >
-            <label className="pr-8">{input.title}</label>
-            <Slider
-              size="small"
-              valueLabelDisplay="auto"
-              onChange={handleInputChange}
-              value={formData[input.props.name] ?? input.props.min}
-              {...input.props}
-            />
-          </div>
+          <>
+            <div id="gutter" className="relative w-full flex pt-1.5"></div>
+            <div
+              key={input.title}
+              className="relative w-full flex justify-between text-left px-2.5"
+            >
+              <label className="pr-8">{input.title}</label>
+              <Slider
+                size="small"
+                valueLabelDisplay="auto"
+                onChange={handleInputChange}
+                value={formData[input.props.name] ?? input.props.min}
+                {...input.props}
+              />
+            </div>
+          </>
+        );
+
+      case "wave":
+        return (
+          <WaveSection waveArr={formData.waveArr} onSubmit={handleWaveSubmit}/>
         );
       default:
         return null;
@@ -166,15 +197,20 @@ const Setting = ({ formData, onFormDataChange }) => {
   return (
     <div
       id="setting"
-      className="fixed w-1/3 min-w-96 rounded-xl p-2.5 m-2.5 bg-red-100"
+      className="fixed top-0 w-1/3 min-w-72 rounded-xl p-2.5 m-2.5 bg-red-100 text-sm"
     >
+
+
+      {/* provide input, text, or image, function modes */}
       {Object.entries(inputSectionMap).map(([section, inputs]) => (
-        <CollapsibleSection
-          key={section}
-          title={section.charAt(0).toUpperCase() + section.slice(1)}
-        >
-          {inputs.map((input) => renderInput(input))}
-        </CollapsibleSection>
+        <div className="grid overflow-auto mb-2.5 last:mb-0">
+          <CollapsibleSection
+            key={section}
+            title={section.charAt(0).toUpperCase() + section.slice(1)}
+          >
+            {inputs.map((input) => renderInput(input))}
+          </CollapsibleSection>
+        </div>
       ))}
     </div>
   );

@@ -11,6 +11,7 @@ const CollapsibleSection = ({ title, children }) => {
 
   const toggleVisibility = () => setIsVisible((prev) => !prev);
 
+  //Button animation
   useEffect(() => {
     gsap.to(iconRef.current, {
       rotation: isVisible ? 180 : 90,
@@ -20,15 +21,15 @@ const CollapsibleSection = ({ title, children }) => {
   }, [isVisible]);
 
   return (
-    <div className="mb-4 grid overflow-hidden">
+    <>
       <div className="flex items-center content-center justify-between">
         <p className="font-bold flex-start">{title}</p>
         <IconButton size="small" onClick={toggleVisibility} ref={iconRef}>
           <ExpandLessOutlinedIcon />
         </IconButton>
       </div>
-      <CollapseWrapper isVisible={isVisible}><div>{children}</div></CollapseWrapper>
-    </div>
+      <CollapseWrapper isVisible={isVisible}>{children}</CollapseWrapper>
+    </>
   );
 };
 

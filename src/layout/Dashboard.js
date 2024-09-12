@@ -15,6 +15,7 @@ const Dashboard = () => {
         'ease': 0.55,
         'force': 1,
         'radius': 120,
+        'waveArr': [],
         
       });
     

@@ -1,15 +1,11 @@
-import React, { useRef} from "react";
+import React, { useRef } from "react";
 import gsap from "gsap";
-import {
-  Transition,
-  TransitionGroup,
-} from "react-transition-group";
+import { Transition, TransitionGroup } from "react-transition-group";
 
 const CollapseWrapper = ({ isVisible, children }) => {
   const nodeRef = useRef(null);
 
   return (
-
     <TransitionGroup>
       {isVisible && (
         <Transition
