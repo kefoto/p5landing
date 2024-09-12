@@ -13,7 +13,7 @@ export class Tile {
     this.force = 0;
     this.angle = 0;
     this.origin = { x: x * w, y: y * h };
-    this.originalOrigin = { ...this.origin};
+    this.originalOrigin = { ...this.origin };
     this.delta = { x: 0, y: 0 };
   }
 
@@ -23,7 +23,7 @@ export class Tile {
 
     let distance = Math.sqrt(this.delta.x ** 2 + this.delta.y ** 2);
     // this.force = (1) * (radius - distance) / radius;
-    this.force = (-0.6) *  (radius) / distance;
+    this.force = (-0.6 * radius) / distance;
 
     if (distance < radius) {
       this.angle = Math.atan2(this.delta.y, this.delta.x);
@@ -39,13 +39,14 @@ export class Tile {
 
   update2(moveX, moveY, mouseX, mouseY, radius, friction, ease) {
     let distance = Math.sqrt(
-      (this.dx + this.dw / 2 - mouseX) ** 2 + (this.dy + this.dh / 2 - mouseY) ** 2
+      (this.dx + this.dw / 2 - mouseX) ** 2 +
+        (this.dy + this.dh / 2 - mouseY) ** 2
     );
     if (distance < radius) {
       let distanceFactor = (radius - distance) / radius;
       // Apply a smaller translation factor to slow down the movement
-      this.vx += moveX * 1.5 * (-1) * distanceFactor;// Reduce the translation factor to slow down the movement
-      this.vy += moveY * 1.5 * (-1) * distanceFactor; // Reduce the translation factor to slow down the movement
+      this.vx += moveX * 1.5 * -1 * distanceFactor; // Reduce the translation factor to slow down the movement
+      this.vy += moveY * 1.5 * -1 * distanceFactor; // Reduce the translation factor to slow down the movement
     }
 
     this.sx += (this.vx *= friction) + (this.origin.x - this.sx) * ease;
@@ -54,39 +55,50 @@ export class Tile {
 
   wave([a, b, c, d, e, f, g, h]) {
     // Adjust properties using array values
-    [this.sx, this.sy, this.sw, this.sh, this.dx, this.dy, this.dw, this.dh] = 
-      [this.sx, this.sy, this.sw, this.sh, this.dx, this.dy, this.dw, this.dh]
-      .map((val, index) => val + [a, b, c, d, e, f, g, h][index]);
+    [this.sx, this.sy, this.sw, this.sh, this.dx, this.dy, this.dw, this.dh] = [
+      this.sx,
+      this.sy,
+      this.sw,
+      this.sh,
+      this.dx,
+      this.dy,
+      this.dw,
+      this.dh,
+    ].map((val, index) => val + [a, b, c, d, e, f, g, h][index]);
   }
 
   changeOrigin(targetX, targetY) {
     this.origin.x = targetX;
     this.origin.y = targetY;
+
+    // this.dx = targetX;
+    // this.dy = targetY;
   }
 
   resetOrigin() {
     this.origin.x = this.originalOrigin.x;
     this.origin.y = this.originalOrigin.y;
+
+    // this.dx = this.originalOrigin.x;
+    // this.dy = this.originalOrigin.y;
   }
 
-  moveTo(targetX, targetY) {
-  
+  moveTo(targetX, targetY, ex=8, ey=8) {
     let deltaX = targetX - this.sx;
     let deltaY = targetY - this.sy;
 
     // Apply easing to move towards the target position smoothly
-    this.vx += -deltaX;
-    this.vy += -deltaY;
+    this.origin.x += -deltaX * ex;
+    this.origin.y += -deltaY * ey;
 
     // Optionally, you can also update the destination position (dx, dy)
     // this.dx += deltaX;
     // this.dy += deltaY;
   }
 
-  warp(width, height) {
-    
-    this.vx = Math.random() * 2 * width - width;
-    this.vy = Math.random() * 2 * height - height;
+  warp(width, height, v=2) {
+    this.vx = Math.random() * v * width - width;
+    this.vy = Math.random() * v * height - height;
 
     // this.dx = Math.random() * width;
     // this.dy = Math.random() * height;

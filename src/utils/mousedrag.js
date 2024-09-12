@@ -12,6 +12,10 @@ const mousedrag = (p) => {
   let canvasSize;
   let prevMouseX, prevMouseY;
 
+  p.preload = () => {
+    p.img = p.loadImage('./1.JPG');
+  }
+
   p.setup = () => {
     canvasSize = p.min(p.windowWidth, p.windowHeight);
 
@@ -23,10 +27,12 @@ const mousedrag = (p) => {
     pg.fill(0);
     pg.textSize(canvasSize / 4);
     pg.push();
-    pg.translate(p.width / 2, p.height / 2);
-    pg.textAlign(p.CENTER, p.CENTER);
-    pg.scale(1, 1.2);
-    pg.text("hello", 0, 0);
+    // pg.translate(p.width / 2, p.height / 2);
+    // pg.textAlign(p.CENTER, p.CENTER);
+    // pg.scale(1, 1.2);
+    // pg.text("hello", 0, 0);
+
+    pg.image(p.img, 0, 0);
 
     // p.frameRate(30);
 
@@ -69,10 +75,10 @@ const mousedrag = (p) => {
         ease
       );
 
-      // let dis = p.dist(p.width / 2, p.height / 2, tile.dx, tile.dy);
-      // let w = p.int(p.sin(p.frameCount * 0.04 + dis * 0.0015) * 15)
-      // let w2 = p.int(p.cos(p.frameCount * 0.02 +  dis * 0.02) * 17)
-      // tile.wave([w - w2, w2 - w, 0, 0, 0, 0, 0, 0]);
+      let dis = p.dist(p.width / 2, p.height / 2, tile.dx, tile.dy);
+      let w = p.int(p.sin(p.frameCount * 0.04 + dis * 0.0015) * 15)
+      let w2 = p.int(p.cos(p.frameCount * 0.02 +  dis * 0.02) * 17)
+      tile.wave([w - w2, w2 - w, 0, 0, 0, 0, 0, 0]);
       p.copy(
         pg,
         tile.sx,
@@ -90,22 +96,23 @@ const mousedrag = (p) => {
   p.mousePressed = () => {
     tiles.forEach((tile) => {
       tile.warp(p.width, p.height);
-      // tile.moveTo(p.mouseX, p.mouseY, 0.10);
-
+      // tile.moveTo(p.mouseX, p.mouseY, 1);
       tile.changeOrigin(p.mouseX, p.mouseY);
-      // let dis = p.dist(p.width / 2, p.height / 2, tile.dx, tile.dy);
-      // let w = p.int(p.sin(p.frameCount * 0.04 + dis * 0.0015) * 15)
-      // let w2 = p.int(p.cos(p.frameCount * 0.02 +  dis * 0.02) * 17)
-      // tile.wave([w - w2, w2 - w, 0, 0, 0, 0, 0, 0]);
     });
   }
 
   p.mouseReleased = () => {
     tiles.forEach((tile) => {
-      tile.moveTo(p.mouseX, p.mouseY, 0.10);
+      // tile.moveTo(p.mouseX, p.mouseY, 0.10);
       tile.resetOrigin();
     });
   }
+
+  // p.mouseClicked = () => {
+  //   tiles.forEach((tile) => {
+  //     tile.moveTo(p.mouseX, p.mouseY, 1);
+  //   });
+  // }
 
 };
 
