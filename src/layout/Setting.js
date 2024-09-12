@@ -1,4 +1,7 @@
-import { Slider } from "@mui/material";
+
+
+
+import { Slider, Switch } from "@mui/material";
 import React from "react";
 import CollapsibleSection from "../components/elements/CollapsibleSection";
 import WaveSection from "../components/elements/WaveSection";
@@ -16,7 +19,7 @@ import WaveSection from "../components/elements/WaveSection";
           wave values,
 
           modes
-
+    TODO: the slider overflows for some reason
 */
 
 const inputSectionMap = {

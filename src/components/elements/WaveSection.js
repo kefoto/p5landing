@@ -1,14 +1,24 @@
 import React, { useState } from "react";
-import { Slider, Select, MenuItem, IconButton, Button } from "@mui/material";
+import { Slider, Select, MenuItem, IconButton, Alert } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
+import DoneRoundedIcon from "@mui/icons-material/DoneRounded";
+import RemoveRoundedIcon from "@mui/icons-material/RemoveRounded";
 
 //TODO: there are lots of bugs here
 const WaveSection = ({ waveArr = [], onSubmit }) => {
   const [waves, setWaves] = useState([...waveArr]);
 
+  const [alertVisible, setAlertVisible] = React.useState(false);
+
   const handleAddWave = () => {
+    if (waveArr.length >= 4) {
+      setAlertVisible(true); // Show alert if trying to add more than 4 waves
+      return;
+    }
+    setAlertVisible(false);
+
     const newWave = {
       id: waves.length + 1,
       type: "sin",
@@ -21,7 +31,9 @@ const WaveSection = ({ waveArr = [], onSubmit }) => {
 
   const handleRemoveWave = (id) => {
     setWaves(waves.filter((wave) => wave.id !== id));
+    setAlertVisible(false);
   };
+
 
   const handleWaveChange = (id, field, value) => {
     const updatedWaves = waves.map((wave) =>
@@ -42,11 +54,11 @@ const WaveSection = ({ waveArr = [], onSubmit }) => {
           <div className="flex justify-between items-center mb-2">
             <label className="font-bold">Wave {index + 1}</label>
             <IconButton size="small" onClick={() => handleRemoveWave(wave.id)}>
-              <RemoveCircleOutlineIcon />
+              <RemoveRoundedIcon />
             </IconButton>
           </div>
 
-          <div className="flex justify-between items-center mb-2">
+          <div className="flex justify-between items-center">
             <label className="pr-2">Type</label>
             <Select
               value={wave.type}
@@ -62,7 +74,7 @@ const WaveSection = ({ waveArr = [], onSubmit }) => {
             </Select>
           </div>
 
-          <div className="flex justify-between items-center mb-2">
+          <div className="flex justify-between items-center">
             <label className="pr-2">Frequency</label>
             <Slider
               size="small"
@@ -77,7 +89,7 @@ const WaveSection = ({ waveArr = [], onSubmit }) => {
             />
           </div>
 
-          <div className="flex justify-between items-center mb-2">
+          <div className="flex justify-between items-center">
             <label className="pr-2">Amplitude</label>
             <Slider
               size="small"
@@ -94,17 +106,24 @@ const WaveSection = ({ waveArr = [], onSubmit }) => {
         </div>
       ))}
 
-      <div className="flex justify-center mt-4">
+      <div className="flex justify-center">
         <IconButton size="small" onClick={handleAddWave}>
-          <AddCircleOutlineIcon />
+          <AddRoundedIcon />
         </IconButton>
       </div>
 
-      <div className="flex justify-center mt-4">
-        <Button variant="contained" onClick={handleSubmit}>
-          Submit Waves
-        </Button>
+      <div className="flex justify-center">
+        <IconButton size="small" onClick={handleSubmit}>
+          <DoneRoundedIcon />
+        </IconButton>
       </div>
+
+      {alertVisible && (
+        <Alert severity="error" onClose={() => setAlertVisible(false)} className="mb-2">
+          Maximum of 4 waves allowed!
+        </Alert>
+      )}
+
     </div>
   );
 };

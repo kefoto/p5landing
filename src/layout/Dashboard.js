@@ -2,8 +2,9 @@ import React, {useState} from "react";
 // import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined';
 import Setting from "./Setting";
 import About from "./About";
+import P5Canvas from "../components/elements/P5Canvas";
 // import P5Canvas from "../components/elements/P5Canvas";
-// import mousedrag from "../utils/mousedrag";
+import mousedrag from "../utils/mousedrag";
 
 const Dashboard = () => {
     const [formData, setFormData] = useState({
@@ -28,9 +29,9 @@ const Dashboard = () => {
  return (
     <div className="relative mx-auto w-full max-w-screen p-2.5">
         <About />
-        <Setting formData={formData} onFormDataChange={handleFormDataChange}/>
+        {/* <Setting formData={formData} onFormDataChange={handleFormDataChange}/> */}
         {/* <Render/> */}
-        {/* <P5Canvas sketch={mousedrag} formData={formData} /> */}
+        <P5Canvas sketch={mousedrag}  />
     </div>
  )
 }
