@@ -1,20 +1,21 @@
 import React, { useState } from "react";
 import { Slider, Select, MenuItem, IconButton, Alert } from "@mui/material";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import DoneRoundedIcon from "@mui/icons-material/DoneRounded";
 import RemoveRoundedIcon from "@mui/icons-material/RemoveRounded";
 
+import {FormControl, InputLabel} from "@mui/material";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+
 //TODO: there are lots of bugs here
 const WaveSection = ({ waveArr = [], onSubmit }) => {
   const [waves, setWaves] = useState([...waveArr]);
-
-  const [alertVisible, setAlertVisible] = React.useState(false);
+  const [alertVisible, setAlertVisible] = useState(false);
 
   const handleAddWave = () => {
-    if (waveArr.length >= 4) {
-      setAlertVisible(true); // Show alert if trying to add more than 4 waves
+    if (waves.length >= 4) {
+      setAlertVisible(true);
       return;
     }
     setAlertVisible(false);
@@ -38,13 +39,11 @@ const WaveSection = ({ waveArr = [], onSubmit }) => {
     setAlertVisible(false);
   };
 
-
   const handleWaveChange = (id, field, value) => {
     const updatedWaves = waves.map((wave) =>
       wave.id === id ? { ...wave, [field]: value } : wave
     );
     setWaves(updatedWaves);
-    // onFormDataChange({ ...formData, waveArr: updatedWaves });
   };
 
   const handleSubmit = () => {
@@ -56,36 +55,47 @@ const WaveSection = ({ waveArr = [], onSubmit }) => {
       {waves.map((wave, index) => (
         <div key={wave.id} className="mb-4">
           <div className="flex justify-between items-center mb-2">
-            <label className="font-bold">Wave {index + 1}</label>
+            <label className="border rounded-full border-black aspect-square items-center justify-center">
+              {index + 1}
+            </label>
+            <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+              <InputLabel id="demo-select-small-label">Type</InputLabel>
+              <Select
+                labelId="demo-select-small-label"
+                id="demo-select-small"
+                value={wave.type}
+                onChange={(e) => handleWaveChange(wave.id, "type", e.target.value)}
+              >
+                <MenuItem value="sin">sin</MenuItem>
+                <MenuItem value="cos">cos</MenuItem>
+                <MenuItem value="tan">tan</MenuItem>
+              </Select>
+            </FormControl>
             <IconButton size="small" onClick={() => handleRemoveWave(wave.id)}>
               <RemoveRoundedIcon />
             </IconButton>
           </div>
 
-          <div className="flex justify-between items-center">
-            <label className="pr-2">Type</label>
-            <Select
+          <div className="flex justify-between items-center mb-2">
+            <ToggleButtonGroup
               value={wave.type}
-              onChange={(e) =>
-                handleWaveChange(wave.id, "type", e.target.value)
-              }
+              exclusive
+              onChange={(e, newType) => handleWaveChange(wave.id, "type", newType)}
+              aria-label="wave type"
               size="small"
-              className="w-full"
             >
-              <MenuItem value="sin">Sin</MenuItem>
-              <MenuItem value="cos">Cos</MenuItem>
-              <MenuItem value="tan">Tan</MenuItem>
-            </Select>
+              <ToggleButton value="sin" size="small">sin</ToggleButton>
+              <ToggleButton value="cos" size="small">cos</ToggleButton>
+              <ToggleButton value="tan" size="small">tan</ToggleButton>
+            </ToggleButtonGroup>
           </div>
 
           <div className="flex justify-between items-center">
             <label className="pr-2">Frequency</label>
             <Slider
               size="small"
-              value={wave.freq || 0.1 }
-              onChange={(e, value) =>
-                handleWaveChange(wave.id, "freq", value)
-              }
+              value={wave.freq || 0.1}
+              onChange={(e, value) => handleWaveChange(wave.id, "freq", value)}
               min={0.1}
               max={10}
               step={0.1}
@@ -98,9 +108,7 @@ const WaveSection = ({ waveArr = [], onSubmit }) => {
             <Slider
               size="small"
               value={wave.amp || 0.1}
-              onChange={(e, value) =>
-                handleWaveChange(wave.id, "amp", value)
-              }
+              onChange={(e, value) => handleWaveChange(wave.id, "amp", value)}
               min={0.1}
               max={10}
               step={0.1}
@@ -113,16 +121,13 @@ const WaveSection = ({ waveArr = [], onSubmit }) => {
             <Slider
               size="small"
               value={wave.speed || 0.1}
-              onChange={(e, value) =>
-                handleWaveChange(wave.id, "speed", value)
-              }
+              onChange={(e, value) => handleWaveChange(wave.id, "speed", value)}
               min={0.1}
               max={10}
               step={0.1}
               valueLabelDisplay="auto"
             />
           </div>
-
         </div>
       ))}
 
@@ -139,11 +144,14 @@ const WaveSection = ({ waveArr = [], onSubmit }) => {
       </div>
 
       {alertVisible && (
-        <Alert severity="error" onClose={() => setAlertVisible(false)} className="mb-2">
+        <Alert
+          severity="error"
+          onClose={() => setAlertVisible(false)}
+          className="mb-2"
+        >
           Maximum of 4 waves allowed!
         </Alert>
       )}
-
     </div>
   );
 };
