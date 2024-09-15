@@ -17,9 +17,7 @@ const Dashboard = () => {
         'force': 1,
         'radius': 120,
         'waveArr': [],
-        
       });
-    
       // Function to handle form data change
       const handleFormDataChange = (newData) => {
         setFormData(newData);
@@ -29,9 +27,9 @@ const Dashboard = () => {
  return (
     <div className="relative mx-auto w-full max-w-screen p-2.5">
         <About />
-        {/* <Setting formData={formData} onFormDataChange={handleFormDataChange}/> */}
+        <Setting formData={formData} onFormDataChange={handleFormDataChange}/>
         {/* <Render/> */}
-        <P5Canvas sketch={mousedrag}  />
+        {/* <P5Canvas sketch={mousedrag}  /> */}
     </div>
  )
 }

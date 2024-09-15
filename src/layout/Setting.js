@@ -1,6 +1,3 @@
-
-
-
 import { Slider, Switch } from "@mui/material";
 import React from "react";
 import CollapsibleSection from "../components/elements/CollapsibleSection";
@@ -125,7 +122,7 @@ const Setting = ({ formData, onFormDataChange }) => {
   const handleWaveSubmit = (waveArr) => {
     onFormDataChange({
       ...formData,
-      waveArr,  // Update the wave array in the formData after submit
+      waveArr, // Update the wave array in the formData after submit
     });
   };
 
@@ -145,7 +142,7 @@ const Setting = ({ formData, onFormDataChange }) => {
         );
       case "dSlider":
         return (
-          <>
+          <React.Fragment key={input.title}>
             <div id="gutter" className="relative w-full flex pt-1.5"></div>
             <div
               key={input.title}
@@ -153,24 +150,24 @@ const Setting = ({ formData, onFormDataChange }) => {
             >
               <label className="pr-8">{input.title}</label>
               {/* <div className="justify-between "> */}
-                {input.props.map((prop) => (
-                  <Slider
-                    key={prop.name}
-                    size="small"
-                    valueLabelDisplay="auto"
-                    onChange={handleInputChange}
-                    value={formData[prop.name] ?? prop.min}
-                    {...prop}
-                  />
-                ))}
+              {input.props.map((prop) => (
+                <Slider
+                  key={prop.name}
+                  size="small"
+                  valueLabelDisplay="auto"
+                  onChange={handleInputChange}
+                  value={formData[prop.name] ?? prop.min}
+                  {...prop}
+                />
+              ))}
               {/* </div> */}
             </div>
-          </>
+          </React.Fragment>
         );
 
       case "slider":
         return (
-          <>
+          <React.Fragment key={input.title}>
             <div id="gutter" className="relative w-full flex pt-1.5"></div>
             <div
               key={input.title}
@@ -185,12 +182,16 @@ const Setting = ({ formData, onFormDataChange }) => {
                 {...input.props}
               />
             </div>
-          </>
+          </React.Fragment>
         );
 
       case "wave":
         return (
-          <WaveSection waveArr={formData.waveArr} onSubmit={handleWaveSubmit}/>
+          <WaveSection
+            key={input.title}
+            waveArr={formData.waveArr}
+            onSubmit={handleWaveSubmit}
+          />
         );
       default:
         return null;
@@ -202,18 +203,14 @@ const Setting = ({ formData, onFormDataChange }) => {
       id="setting"
       className="fixed top-0 w-1/3 min-w-72 rounded-xl p-2.5 m-2.5 bg-red-100 text-sm"
     >
-
-
       {/* provide input, text, or image, function modes */}
       {Object.entries(inputSectionMap).map(([section, inputs]) => (
-        <div className="grid overflow-auto mb-2.5 last:mb-0">
-          <CollapsibleSection
-            key={section}
-            title={section.charAt(0).toUpperCase() + section.slice(1)}
-          >
-            {inputs.map((input) => renderInput(input))}
-          </CollapsibleSection>
-        </div>
+        <CollapsibleSection
+          key={section}
+          title={section.charAt(0).toUpperCase() + section.slice(1)}
+        >
+          {inputs.map((input) => renderInput(input))}
+        </CollapsibleSection>
       ))}
     </div>
   );

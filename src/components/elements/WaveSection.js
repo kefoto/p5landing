@@ -25,6 +25,10 @@ const WaveSection = ({ waveArr = [], onSubmit }) => {
       freq: 1,
       amp: 1,
       speed: 1,
+      x: true,
+      y: false,
+      w: false,
+      h: false,
     };
     setWaves([...waves, newWave]);
   };
@@ -78,9 +82,9 @@ const WaveSection = ({ waveArr = [], onSubmit }) => {
             <label className="pr-2">Frequency</label>
             <Slider
               size="small"
-              value={wave.frequency}
+              value={wave.freq || 0.1 }
               onChange={(e, value) =>
-                handleWaveChange(wave.id, "frequency", value)
+                handleWaveChange(wave.id, "freq", value)
               }
               min={0.1}
               max={10}
@@ -93,9 +97,9 @@ const WaveSection = ({ waveArr = [], onSubmit }) => {
             <label className="pr-2">Amplitude</label>
             <Slider
               size="small"
-              value={wave.amplitude}
+              value={wave.amp || 0.1}
               onChange={(e, value) =>
-                handleWaveChange(wave.id, "amplitude", value)
+                handleWaveChange(wave.id, "amp", value)
               }
               min={0.1}
               max={10}
@@ -103,6 +107,22 @@ const WaveSection = ({ waveArr = [], onSubmit }) => {
               valueLabelDisplay="auto"
             />
           </div>
+
+          <div className="flex justify-between items-center">
+            <label className="pr-2">Speed</label>
+            <Slider
+              size="small"
+              value={wave.speed || 0.1}
+              onChange={(e, value) =>
+                handleWaveChange(wave.id, "speed", value)
+              }
+              min={0.1}
+              max={10}
+              step={0.1}
+              valueLabelDisplay="auto"
+            />
+          </div>
+
         </div>
       ))}
 

@@ -4,8 +4,7 @@ import ExpandLessOutlinedIcon from "@mui/icons-material/ExpandLessOutlined";
 import gsap from "gsap";
 import CollapseWrapper from "../wrapper/CollapseWrapper";
 
-
-const CollapsibleSection = ({ title, children }) => {
+const CollapsibleSection = ({ title, children}) => {
   const iconRef = useRef(null);
   const [isVisible, setIsVisible] = useState(true);
 
@@ -21,7 +20,7 @@ const CollapsibleSection = ({ title, children }) => {
   }, [isVisible]);
 
   return (
-    <>
+    <div className="grid mb-2.5 last:mb-0">
       <div className="flex items-center content-center justify-between">
         <p className="font-bold flex-start">{title}</p>
         <IconButton size="small" onClick={toggleVisibility} ref={iconRef}>
@@ -29,7 +28,7 @@ const CollapsibleSection = ({ title, children }) => {
         </IconButton>
       </div>
       <CollapseWrapper isVisible={isVisible}>{children}</CollapseWrapper>
-    </>
+    </div>
   );
 };
 

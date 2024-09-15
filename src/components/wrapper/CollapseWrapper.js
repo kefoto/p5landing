@@ -13,7 +13,7 @@ const CollapseWrapper = ({ isVisible, children }) => {
           timeout={400}
           nodeRef={nodeRef}
           onEnter={() => {
-            gsap.set(nodeRef.current, { height: 0, opacity: 0 });
+            gsap.set(nodeRef.current, { height: 0, opacity: 0 , overflow: 'hidden' });
             gsap
               .timeline({ paused: true })
               .to(nodeRef.current, {
@@ -32,11 +32,15 @@ const CollapseWrapper = ({ isVisible, children }) => {
                 opacity: 0,
                 duration: 0.4,
                 ease: "power2.out",
+                onComplete: () => {
+                  // Reset overflow after animation to allow expansion if needed later
+                  gsap.set(nodeRef.current, { overflow: 'hidden' });
+                }
               })
               .play();
           }}
         >
-          <div ref={nodeRef}>{children}</div>
+          <div ref={nodeRef} className="overflow-y-hidden">{children}</div>
         </Transition>
       )}
     </TransitionGroup>
