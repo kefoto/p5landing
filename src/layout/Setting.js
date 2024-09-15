@@ -1,9 +1,12 @@
-import { Slider, Switch } from "@mui/material";
+import { Slider, Switch, Box, Tooltip } from "@mui/material";
 import React from "react";
 import CollapsibleSection from "../components/elements/CollapsibleSection";
 import WaveSection from "../components/elements/WaveSection";
+import SliderInput from "../components/elements/SliderInput";
+import DoubleSliderInput from "../components/elements/DoubleSliderInput";
+import IOSSlider from "../components/elements/IOSSlider";
 /**
- * fundamental updates after change, 
+ * fundamental updates after change,
  * but waves updates after submit,
          TODO: input file or text,
          mode switch to (edit) able to drag it and change position or (distort) view.
@@ -122,67 +125,88 @@ const Setting = ({ formData, onFormDataChange }) => {
   const handleWaveSubmit = (waveArr) => {
     onFormDataChange({
       ...formData,
-      waveArr, // Update the wave array in the formData after submit
+      waveArr,
     });
   };
 
   const renderInput = (input) => {
     switch (input.type) {
-      case "dInput":
-        return (
-          <div key={input.title} className="mb-2">
-            <label>{input.title}</label>
-            <input
-              {...input.props}
-              value={formData[input.props.name] || ""}
-              onChange={handleInputChange}
-              className="border p-1 rounded w-full"
-            />
-          </div>
-        );
+      // case "dInput":
+      //   return (
+      //     <div key={input.title} className="mb-2">
+      //       <label>{input.title}</label>
+      //       <input
+      //         {...input.props}
+      //         value={formData[input.props.name] || ""}
+      //         onChange={handleInputChange}
+      //         className="border p-1 rounded w-full"
+      //       />
+      //     </div>
+      //   );
       case "dSlider":
         return (
-          <React.Fragment key={input.title}>
-            <div id="gutter" className="relative w-full flex pt-1.5"></div>
+          // <DoubleSliderInput
+          //   key={input.title}
+          //   title={input.title}
+          //   // value={formData[input.props.name] ?? input.props.min}
+          //   formData={formData}
+          //   onChange={handleInputChange}
+          // />
+          <div key={input.title}>
+            <div id="gutter" className="relative flex w-full pt-1.5"></div>
             <div
               key={input.title}
-              className="relative w-full flex justify-between text-left px-2.5"
+              className="relative w-full flex justify-between px-2.5"
             >
-              <label className="pr-8">{input.title}</label>
-              {/* <div className="justify-between "> */}
-              {input.props.map((prop) => (
-                <Slider
-                  key={prop.name}
-                  size="small"
-                  valueLabelDisplay="auto"
-                  onChange={handleInputChange}
-                  value={formData[prop.name] ?? prop.min}
-                  {...prop}
-                />
-              ))}
-              {/* </div> */}
+              <label className="flex-shrink-0 w-[25%] flex items-center">
+                {input.title}
+              </label>
+              <div className="flex-grow w-[75%] flex space-x-4 pr-1">
+                {input.props.map((prop) => (
+                    <IOSSlider
+                      size="small"
+                      key={prop.name}
+                      // valueLabelDisplay="auto"
+                      onChange={handleInputChange}
+                      value={formData[prop.name] ?? prop.min}
+                      {...prop}
+                      sx={{ flex: 1 }}
+                    />
+                ))}
+              </div>
             </div>
-          </React.Fragment>
+          </div>
         );
 
       case "slider":
         return (
-          <React.Fragment key={input.title}>
-            <div id="gutter" className="relative w-full flex pt-1.5"></div>
-            <div
-              key={input.title}
-              className="relative w-full flex justify-between text-left px-2.5"
-            >
-              <label className="pr-8">{input.title}</label>
-              <Slider
-                size="small"
-                valueLabelDisplay="auto"
-                onChange={handleInputChange}
-                value={formData[input.props.name] ?? input.props.min}
-                {...input.props}
-              />
+          <div key={input.title}>
+            {/* Optional gutter */}
+            <div id="gutter" className="relative flex w-full pt-1.5"></div>
+            <div className="relative w-full items-center flex justify-between px-2.5">
+              <label className="flex-shrink-0 w-[25%] flex">
+                {input.title}
+              </label>
+              <div className="flex flex-grow w-[75%] pr-1">
+                <IOSSlider
+                  size="small"
+                  // valueLabelDisplay="auto"
+                  value={formData[input.props.name] ?? input.props.min}
+                  onChange={(e, newValue) => handleInputChange(e, newValue)}
+                  // {...sliderProps}
+                  {...input.props}
+                />
+              </div>
             </div>
-          </React.Fragment>
+          </div>
+
+          // <SliderInput
+          //   key={input.title}
+          //   title={input.title}
+          //   value={formData[input.props.name] ?? input.props.min}
+          //   onChange={(e, newValue) => handleInputChange(e, newValue)}
+          //   sliderProps={input.props}
+          // />
         );
 
       case "wave":

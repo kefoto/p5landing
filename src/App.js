@@ -3,7 +3,6 @@ import P5Canvas from './components/elements/P5Canvas';
 import mousedrag from './utils/mousedrag';
 
 import Dashboard from './layout/Dashboard';
-import './App.css';
 // import P5Canvas from './components/elements/P5Canvas';
 
 function App() {
