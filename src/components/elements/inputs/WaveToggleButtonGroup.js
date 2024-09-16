@@ -1,9 +1,10 @@
 import React from "react";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+import StyledToggleButtonGroup from "./StyledToggleButtonGroup";
 
 const WaveToggleButtonGroup = ({ value, onChange }) => {
   return (
-    <ToggleButtonGroup
+    <StyledToggleButtonGroup
       value={value}
       exclusive
       onChange={(e, newType) => {
@@ -12,10 +13,6 @@ const WaveToggleButtonGroup = ({ value, onChange }) => {
         }
       }}
       aria-label="wave type"
-      sx={{
-
-        height: "1.75rem",
-      }}
     >
       <ToggleButton
         value="sin"
@@ -47,7 +44,7 @@ const WaveToggleButtonGroup = ({ value, onChange }) => {
       >
         tan
       </ToggleButton>
-    </ToggleButtonGroup>
+    </StyledToggleButtonGroup>
   );
 };
 

@@ -12,6 +12,7 @@ import ExpandLessOutlinedIcon from "@mui/icons-material/ExpandLessOutlined";
 import gsap from "gsap";
 import CollapseWrapper from "../wrapper/CollapseWrapper";
 import WaveToggleButtonGroup from "./inputs/WaveToggleButtonGroup";
+import StyledToggleButtonGroup from "./inputs/StyledToggleButtonGroup";
 // TODO: transition margin fix
 const Wave = ({ wave, index, onRemove, onWaveChange, onToggleChange }) => {
   const iconRef = useRef(null);
@@ -92,7 +93,7 @@ const Wave = ({ wave, index, onRemove, onWaveChange, onToggleChange }) => {
                 onChange={(newType) => onWaveChange(wave.id, "type", newType)}
               />
             </div>
-            <div className="flex items-center pr-2.5 justify-end">
+            <div className="flex items-center pr-2.5">
               <ToggleButtonGroup
                 value={[
                   ...(wave.x ? ["x"] : []),
@@ -105,46 +106,46 @@ const Wave = ({ wave, index, onRemove, onWaveChange, onToggleChange }) => {
                 }
                 aria-label="wave toggles"
                 size="small"
-                sx={{ height: "1.75rem" }}
+                sx={{
+                  display: "flex",
+                  border: "1px solid #000",
+                  flexWrap: "wrap",
+                  borderRadius: "2rem",
+                  gap: "0.25rem",
+
+                  // backgroundColor: '#e0e0e0', // Uncomment if you want to set a background color
+                  "& .MuiToggleButtonGroup-grouped": {
+                    margin: "0.125rem 0rem 0.125rem 0rem",
+                    border: "none",
+                    borderRadius: "2rem",
+                    width: "1.5rem",
+                    height: "1.5rem",
+                    fontSize: "0.7rem",
+                  },
+                  ".MuiToggleButtonGroup-grouped.Mui-disabled": {
+                    border: "none",
+                  },
+
+                  ".MuiToggleButtonGroup-grouped:first-of-type": {
+                    "marginLeft": "0.125rem",
+                    // "border-left": "0.125rem solid black",
+                  },
+                  ".MuiToggleButtonGroup-grouped:last-of-type": {
+                    "marginRight": "0.125rem",
+                    // "border-left": "0.125rem solid black",
+                  },
+                }}
               >
-                <ToggleButton
-                  value="x"
-                  size="small"
-                  sx={{
-                    borderRadius: "50%",
-                    textTransform: "none",
-                  }}
-                >
+                <ToggleButton value="x" size="small">
                   x
                 </ToggleButton>
-                <ToggleButton
-                  value="y"
-                  size="small"
-                  sx={{
-                    borderRadius: "50%",
-                    textTransform: "none",
-                  }}
-                >
+                <ToggleButton value="y" size="small">
                   y
                 </ToggleButton>
-                <ToggleButton
-                  value="w"
-                  size="small"
-                  sx={{
-                    borderRadius: "50%",
-                    textTransform: "none",
-                  }}
-                >
+                <ToggleButton value="w" size="small">
                   w
                 </ToggleButton>
-                <ToggleButton
-                  value="h"
-                  size="small"
-                  sx={{
-                    borderRadius: "50%",
-                    textTransform: "none",
-                  }}
-                >
+                <ToggleButton value="h" size="small">
                   h
                 </ToggleButton>
               </ToggleButtonGroup>

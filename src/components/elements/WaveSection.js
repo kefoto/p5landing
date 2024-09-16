@@ -15,6 +15,7 @@ import {
   // Button,
   // ToggleButton,
   // ToggleButtonGroup,
+  Tooltip,
 } from "@mui/material";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import DoneRoundedIcon from "@mui/icons-material/DoneRounded";
@@ -106,13 +107,22 @@ const WaveSection = ({ waveArr = [], onSubmit }) => {
       ))}
       <div className="flex items-center content-center justify-between pt-1.5">
         {/* <div className="flex justify-center"> */}
-        <IconButton
-          size="small"
-          onClick={handleAddWave}
-          disabled={alertVisible}
+        <Tooltip
+          title={alertVisible ? "Maximum 2 waves allowed" : ""}
+          disableHoverListener={!alertVisible}
+          placement="right"
+          arrow // Only show tooltip when alertVisible is true
         >
-          <AddRoundedIcon />
-        </IconButton>
+          <span>
+            <IconButton
+              size="small"
+              onClick={handleAddWave}
+              disabled={alertVisible}
+            >
+              <AddRoundedIcon />
+            </IconButton>
+          </span>
+        </Tooltip>
 
         {/* <div className="flex justify-center"> */}
         <IconButton
