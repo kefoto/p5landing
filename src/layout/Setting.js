@@ -2,9 +2,9 @@ import { Slider, Switch, Box, Tooltip } from "@mui/material";
 import React from "react";
 import CollapsibleSection from "../components/elements/CollapsibleSection";
 import WaveSection from "../components/elements/WaveSection";
-import SliderInput from "../components/elements/SliderInput";
-import DoubleSliderInput from "../components/elements/DoubleSliderInput";
-import IOSSlider from "../components/elements/IOSSlider";
+// import SliderInput from "../components/elements/SliderInput";
+// import DoubleSliderInput from "../components/elements/DoubleSliderInput";
+import IOSSlider from "../components/elements/inputs/IOSSlider";
 /**
  * fundamental updates after change,
  * but waves updates after submit,
