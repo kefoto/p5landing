@@ -1,6 +1,4 @@
-import React from "react";
-
-import Slider, { SliderThumb } from "@mui/material/Slider";
+import Slider from "@mui/material/Slider";
 import { styled } from "@mui/material/styles";
 
 const iOSBoxShadow =
@@ -16,7 +14,7 @@ const iOSBoxShadow =
       boxShadow: '0 0 2px 0px rgba(0, 0, 0, 0.1)',
       '&:focus, &:hover, &.Mui-active': {
         boxShadow: '0px 0px 3px 1px rgba(0, 0, 0, 0.1)',
-        // Reset on touch devices, it doesn't add specificity
+        
         '@media (hover: none)': {
           boxShadow: iOSBoxShadow,
         },

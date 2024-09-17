@@ -32,7 +32,6 @@ const mousedrag = (p) => {
     pg.scale(1, 2);
     pg.text("hello", 0, 0);
 
-    
     // pg.image(p.img, 0, 0);
     // pg.translate(p.width / 2, p.height / 2);
     // pg.push();

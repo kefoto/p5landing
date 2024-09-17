@@ -12,11 +12,11 @@ import ExpandLessOutlinedIcon from "@mui/icons-material/ExpandLessOutlined";
 import gsap from "gsap";
 import CollapseWrapper from "../wrapper/CollapseWrapper";
 import WaveToggleButtonGroup from "./inputs/WaveToggleButtonGroup";
-import StyledToggleButtonGroup from "./inputs/StyledToggleButtonGroup";
-// TODO: transition margin fix
+
+
 const Wave = ({ wave, index, onRemove, onWaveChange, onToggleChange }) => {
   const iconRef = useRef(null);
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(wave.isVisible);
 
   const toggleVisibility = () => setIsVisible((prev) => !prev);
 
@@ -28,14 +28,15 @@ const Wave = ({ wave, index, onRemove, onWaveChange, onToggleChange }) => {
     });
   }, [isVisible]);
 
+  useEffect(() => {
+    setIsVisible(wave.isVisible);
+  }, [wave.isVisible]);
+
   return (
     <div className="w-full">
       <div id="gutter" className="relative flex w-full pt-1.5"></div>
       <div className="flex justify-between items-center h-full w-full pb-1.5">
         <div className="space-x-4 flex items-center">
-          {/* <IconButton size="small" onClick={toggleVisibility} ref={iconRef}>
-            <ExpandLessOutlinedIcon />
-          </IconButton> */}
           <Chip
             label={wave.type}
             icon={
@@ -127,11 +128,11 @@ const Wave = ({ wave, index, onRemove, onWaveChange, onToggleChange }) => {
                   },
 
                   ".MuiToggleButtonGroup-grouped:first-of-type": {
-                    "marginLeft": "0.125rem",
+                    marginLeft: "0.125rem",
                     // "border-left": "0.125rem solid black",
                   },
                   ".MuiToggleButtonGroup-grouped:last-of-type": {
-                    "marginRight": "0.125rem",
+                    marginRight: "0.125rem",
                     // "border-left": "0.125rem solid black",
                   },
                 }}
@@ -159,9 +160,9 @@ const Wave = ({ wave, index, onRemove, onWaveChange, onToggleChange }) => {
                 size="small"
                 value={wave.freq || 0.1}
                 onChange={(e, value) => onWaveChange(wave.id, "freq", value)}
-                min={0.1}
-                max={10}
-                step={0.1}
+                min={0.01}
+                max={0.1}
+                step={0.01}
               />
             </div>
           </div>
@@ -171,7 +172,7 @@ const Wave = ({ wave, index, onRemove, onWaveChange, onToggleChange }) => {
             <div className="flex flex-grow w-[65%]">
               <IOSSlider
                 size="small"
-                value={wave.amp || 0.1}
+                value={wave.amp || 1}
                 onChange={(e, value) => onWaveChange(wave.id, "amp", value)}
                 min={-10}
                 max={10}
@@ -187,9 +188,9 @@ const Wave = ({ wave, index, onRemove, onWaveChange, onToggleChange }) => {
                 size="small"
                 value={wave.speed || 0.1}
                 onChange={(e, value) => onWaveChange(wave.id, "speed", value)}
-                min={0.1}
-                max={10}
-                step={0.1}
+                min={0.01}
+                max={0.5}
+                step={0.01}
               />
             </div>
           </div>

@@ -1,7 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 
-//TODO: change whether I need an exitAnimation 
 const AnimatedWrapper = ({ children, enterAnimation, exitAnimation, ...props }) => {
   const wrapperRef = useRef(null);
 

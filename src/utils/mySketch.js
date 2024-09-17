@@ -1,4 +1,4 @@
-//TODO: this is a test
+//this is a test
 
 const mySketch = (p) => {
   p.setup = () => {
