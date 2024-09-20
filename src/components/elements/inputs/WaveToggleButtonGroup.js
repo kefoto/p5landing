@@ -1,5 +1,5 @@
 import React from "react";
-import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { ToggleButton } from "@mui/material";
 import StyledToggleButtonGroup from "./StyledToggleButtonGroup";
 
 const WaveToggleButtonGroup = ({ value, onChange }) => {

@@ -2,23 +2,36 @@ import React, { useState } from "react";
 import { Switch, Button, TextField, IconButton, Chip } from "@mui/material";
 import DoneRoundedIcon from "@mui/icons-material/DoneRounded";
 import UploadIcon from "@mui/icons-material/Upload";
+import CollapseWidthWrapper from "../wrapper/CollapseWidthWrapper";
+
 const ImportSection = ({ imports, onSubmit }) => {
-  const [isImportImage, setIsImportImage] = useState(false);
-  const [importData, setImportData] = useState([imports]);
-  // Event handler for the switch toggle
-  const handleSwitchChange = (event) => {
-    setIsImportImage(event.target.checked);
-    // setImportData(null);
+  const [importData, setImportData] = useState(imports);
+
+  const handleImportChange = (event) => {
+    const newboolean = event.target.checked;
+    setImportData((prevData) => ({
+      ...prevData, 
+      isImage: newboolean, 
+    }));
+
+    // console.log(newboolean);
   };
 
   const handleTextChange = (event) => {
-    setImportData(event.target.value);
+    const newText = event.target.value;
+    setImportData((prevData) => ({
+      ...prevData, 
+      text: newText,
+    }));
   };
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setImportData(file); // Store the file in the state
+      setImportData((prevData) => ({
+        ...prevData, 
+        image: file,
+      }));
     }
   };
 
@@ -34,8 +47,8 @@ const ImportSection = ({ imports, onSubmit }) => {
       <div className="relative flex w-full pb-1.5 justify-between items-center content-center pr-1.5">
         <Switch
           size="small"
-          checked={isImportImage}
-          onChange={handleSwitchChange}
+          checked={importData.isImage}
+          onChange={handleImportChange}
           sx={{
             transform: "rotate(270deg)", // Rotate 90 degrees
             transformOrigin: "center",
@@ -45,7 +58,7 @@ const ImportSection = ({ imports, onSubmit }) => {
           }}
         />
         <div className="flex flex-shrink-0 w-[60%] h-20 justify-center items-center">
-          {isImportImage ? (
+          {importData.isImage ? (
             <div className="flex flex-shrink-0 w-full  justify-center items-center space-x-2">
               <label htmlFor="upload-image">
                 <input
@@ -62,24 +75,27 @@ const ImportSection = ({ imports, onSubmit }) => {
                   <UploadIcon />
                 </IconButton>
               </label>
-              {importData instanceof File && importData.name && (
+              <CollapseWidthWrapper
+                isVisible={importData.image.name}
+                keyProp={importData.image.name}
+              >
                 <Chip
-                  label={importData.name}
+                  label={importData.image.name}
                   variant="outlined"
                   size="small"
                   sx={{
                     padding: "0.125rem",
-                    // height: "3rem",
+                    whiteSpace: "nowrap",
                   }}
                 />
-              )}
+              </CollapseWidthWrapper>
             </div>
           ) : (
             // Render the text field for text data
             <TextField
               label="Import Text Data"
               variant="standard"
-              value={importData}
+              value={importData.text}
               onChange={handleTextChange}
               size="small"
               required

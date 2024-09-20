@@ -10,19 +10,20 @@ const P5Canvas = ({ data }) => {
     const {
       tileX: tilesX,
       tileY: tilesY,
-      scaleX: scaleX,
-      scaleY: scaleY,
-      offsetX: offsetX,
-      offsetY: offsetY,
+      scaleX,
+      scaleY,
+      offsetX,
+      offsetY,
       radius: collisionRadius,
       friction,
       ease,
       importData: display,
       waveArr: waveArrays,
+      waveDisplay,
       force,
     } = data;
 
-    const isImage = data.importData instanceof File && data.importData;
+    const isImage = display.isImage;
     let tiles = [];
 
     const mousedrag = (p) => {
@@ -38,17 +39,22 @@ const P5Canvas = ({ data }) => {
       const computeWave = (waveArrays, dis, frameCount) => {
         if (!waveArrays) return [0, 0, 0, 0];
 
-        return waveArrays.reduce((acc, wave) => {
-          const waveFunc = getWaveFunction(wave.type);
-          const result = p.int(waveFunc(frameCount * wave.speed + dis * wave.freq) * wave.amp);
+        return waveArrays.reduce(
+          (acc, wave) => {
+            const waveFunc = getWaveFunction(wave.type);
+            const result = p.int(
+              waveFunc(frameCount * wave.speed + dis * wave.freq) * wave.amp
+            );
 
-          if (wave.x) acc[0] = result;
-          if (wave.y) acc[1] = result;
-          if (wave.w) acc[2] = result;
-          if (wave.h) acc[3] = result;
+            if (wave.x) acc[0] = result;
+            if (wave.y) acc[1] = result;
+            if (wave.w) acc[2] = result;
+            if (wave.h) acc[3] = result;
 
-          return acc;
-        }, [0, 0, 0, 0]);
+            return acc;
+          },
+          [0, 0, 0, 0]
+        );
       };
 
       const getWaveFunction = (type) => {
@@ -80,9 +86,13 @@ const P5Canvas = ({ data }) => {
         pg.scale(scaleX, scaleY);
 
         if (isImage) {
-          pg.image(p.img, 0, 0);
+          pg.image(p.img, offsetX * p.windowWidth, offsetY * p.windowHeight);
         } else {
-          pg.text(display, offsetX, offsetY);
+          pg.text(
+            display.text,
+            (offsetX * p.windowWidth) / 2,
+            (offsetY * p.windowHeight) / 2
+          );
         }
         // pg.translate(p.width / 2, p.height / 2);
         // pg.push();
@@ -127,54 +137,12 @@ const P5Canvas = ({ data }) => {
           );
 
           let dis = p.dist(p.width / 2, p.height / 2, tile.dx, tile.dy);
-          const resultArray = computeWave(waveArrays, dis, p.frameCount);
-          // const ?
-          if (waveArrays) {
-            waveArrays.forEach((wave) => {
-              let result; // Variable to store the calculated value
 
-              switch (wave.type) {
-                case "sin":
-                  result = p.int(
-                    p.sin(p.frameCount * wave.speed + dis * wave.freq) *
-                      wave.amp
-                  );
-                  break;
-                case "cos":
-                  result = p.int(
-                    p.cos(p.frameCount * wave.speed + dis * wave.freq) *
-                      wave.amp
-                  );
-                  break;
-                case "tan":
-                  result = p.int(
-                    p.tan(p.frameCount * wave.speed + dis * wave.freq) *
-                      wave.amp
-                  );
-                  break;
-                default:
-                  result = 0;
-                  break;
-              }
-
-              if (wave.x) {
-                resultArray[0] = result;
-              }
-              if (wave.y) {
-                resultArray[1] = result;
-              }
-              if (wave.w) {
-                resultArray[2] = result;
-              }
-              if (wave.h) {
-                resultArray[3] = result;
-              }
-
-              console.log(resultArray);
-            });
+          if (waveArrays && waveDisplay) {
+            const resultArray = computeWave(waveArrays, dis, p.frameCount);
+            tile.wave(resultArray);
           }
 
-          tile.wave(resultArray);
           p.copy(
             pg,
             tile.sx,
@@ -197,12 +165,12 @@ const P5Canvas = ({ data }) => {
       //   });
       // };
 
-      p.mouseReleased = () => {
-        tiles.forEach((tile) => {
-          // tile.moveTo(p.mouseX, p.mouseY, 0.10);
-          tile.resetOrigin();
-        });
-      };
+      // p.mouseReleased = () => {
+      //   tiles.forEach((tile) => {
+      //     // tile.moveTo(p.mouseX, p.mouseY, 0.10);
+      //     tile.resetOrigin();
+      //   });
+      // };
     };
 
     const p5Instance = new p5(mousedrag, canvasRef.current);

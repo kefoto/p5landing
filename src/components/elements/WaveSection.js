@@ -21,9 +21,10 @@ import DoneRoundedIcon from "@mui/icons-material/DoneRounded";
 
 import Wave from "./Wave";
 
-const max_waves = 3;
+const max_waves = 2;
 
 //TODO: there are lots of bugs here
+//TODO: toggle effect on
 const WaveSection = ({ waveArr = [], onSubmit }) => {
   const [waves, setWaves] = useState([...waveArr]);
   const [alertVisible, setAlertVisible] = useState(false);

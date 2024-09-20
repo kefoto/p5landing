@@ -1,5 +1,5 @@
-import {Switch, IconButton} from "@mui/material";
-import React, { useCallback } from "react";
+import { Switch, IconButton } from "@mui/material";
+import React from "react";
 
 // import throttle from "lodash/debounce";
 import CollapsibleSection from "../components/elements/CollapsibleSection";
@@ -11,6 +11,9 @@ import MultiSliderInput from "../components/elements/inputs/MultiSliderInput";
 
 import ExpandCircleDownRoundedIcon from "@mui/icons-material/ExpandCircleDownRounded";
 import ImportSection from "../components/elements/ImportSection";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import ToggleOffIcon from "@mui/icons-material/ToggleOff";
+import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 /**
  * fundamental updates after change,
  * but waves updates after submit,
@@ -33,6 +36,7 @@ const inputSectionMap = {
     {
       title: "Imports",
       type: "import",
+      // module: "reset",
     },
   ],
   Base: [
@@ -75,25 +79,25 @@ const inputSectionMap = {
           name: "offsetX",
           min: -1,
           max: 1,
-          step: 0.1,
+          step: 0.01,
         },
         {
           name: "offsetY",
           min: -1,
           max: 1,
-          step: 0.1,
+          step: 0.01,
         },
       ],
     },
   ],
-  interactions: [
+  Interactions: [
     {
       title: "Friction",
       type: "slider",
       props: {
         name: "friction",
-        min: 0,
-        max: 1,
+        min: 0.02,
+        max: 0.98,
         step: 0.02,
       },
     },
@@ -102,8 +106,8 @@ const inputSectionMap = {
       type: "slider",
       props: {
         name: "ease",
-        min: 0,
-        max: 1,
+        min: 0.02,
+        max: 0.98,
         step: 0.02,
       },
     },
@@ -128,16 +132,23 @@ const inputSectionMap = {
       },
     },
   ],
-  waves: [
+  Waves: [
     {
       title: "Waves",
       type: "wave",
+      // module: "toggle",
     },
   ],
 };
 
-const Setting = ({ formData, onFormDataChange }) => {
+const inputButtonModuleMap = {
+  Import: "",
+  Base: "reset1",
+  Interactions: "reset2",
+  Waves: "toggle",
+};
 
+const Setting = ({ formData, onFormDataChange }) => {
   // const throttledOnFormDataChange = useCallback(
   //   throttle((newData) => onFormDataChange(newData), 200), // Adjust the debounce delay as needed
   //   [onFormDataChange]
@@ -145,9 +156,19 @@ const Setting = ({ formData, onFormDataChange }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
+    if (name === "tileX" || name === "tileY") {
+      const newValue = Number(value);
+      const otherValue = formData[name === "tileX" ? "tileY" : "tileX"];
+
+      if (newValue + otherValue >= 151) {
+        return; // Prevent the update if the limit is exceeded
+      }
+    }
+
     onFormDataChange({
       ...formData,
-      [name]: value
+      [name]: value,
     });
   };
 
@@ -158,11 +179,97 @@ const Setting = ({ formData, onFormDataChange }) => {
     });
   };
 
+  const handleToggle = () => {
+    // Toggle logic here, for example, switch between two states
+    onFormDataChange({
+      ...formData,
+      waveDisplay: !formData.waveDisplay,
+    });
+  };
+
+  const handleBaseReset = () => {
+    onFormDataChange({
+      ...formData,
+      tileX: 20,
+      tileY: 64,
+      scaleX: 1,
+      scaleY: 1,
+      offsetX: 0,
+      offsetY: 0,
+    });
+  };
+
+  const handleInterReset = () => {
+    onFormDataChange({
+      ...formData,
+      friction: 0.9,
+      ease: 0.55,
+      force: 1,
+      radius: 120,
+    });
+  };
+
   const handleImportSubmit = (importData) => {
     onFormDataChange({
       ...formData,
       importData,
     });
+  };
+
+  const renderButton = (type) => {
+    switch (type) {
+      case "reset1":
+        return (
+          <IconButton
+            size="small"
+            onClick={handleBaseReset}
+            sx={{
+              borderRadius: "50%",
+              padding: "0.125rem",
+            }}
+          >
+            <RefreshIcon
+              sx={{
+                padding: "0.125rem",
+              }}
+            />
+          </IconButton>
+        );
+
+      case "reset2":
+        return (
+          <IconButton
+            size="small"
+            onClick={handleInterReset}
+            sx={{
+              borderRadius: "50%",
+              padding: "0.125rem",
+            }}
+          >
+            <RefreshIcon
+              sx={{
+                padding: "0.125rem",
+              }}
+            />
+          </IconButton>
+        );
+
+      case "toggle":
+        return (
+          <IconButton
+            onClick={handleToggle}
+            size="small"
+            sx={{
+              borderRadius: "50%",
+              padding: "0.125rem",
+            }}
+          >
+            {formData.waveDisplay ? <ToggleOnIcon /> : <ToggleOffIcon />}
+          </IconButton>
+        );
+      default:
+        return null;
+    }
   };
 
   const renderInput = (input) => {
@@ -226,6 +333,7 @@ const Setting = ({ formData, onFormDataChange }) => {
         <CollapsibleSection
           key={section}
           title={section.charAt(0).toUpperCase() + section.slice(1)}
+          button_module={renderButton(inputButtonModuleMap[section])}
         >
           {inputs.map((input) => renderInput(input))}
         </CollapsibleSection>
