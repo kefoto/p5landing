@@ -23,7 +23,7 @@ const CollapsibleSection = ({ title, children, button_module = null }) => {
     <div className="grid mb-2.5 last:mb-0">
       <div className="flex items-center justify-between">
         <p className="font-bold">{title}</p>
-        <div className="flex space-x-2">
+        <div className="flex space-x-2 items-center">
           {button_module}
           <IconButton
             size="small"

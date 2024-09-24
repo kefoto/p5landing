@@ -1,5 +1,5 @@
 import { Switch, IconButton } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 
 // import throttle from "lodash/debounce";
 import CollapsibleSection from "../components/elements/CollapsibleSection";
@@ -14,6 +14,8 @@ import ImportSection from "../components/elements/ImportSection";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import ToggleOffIcon from "@mui/icons-material/ToggleOff";
 import ToggleOnIcon from "@mui/icons-material/ToggleOn";
+
+import CollapseWrapper from "../components/wrapper/CollapseWrapper";
 /**
  * fundamental updates after change,
  * but waves updates after submit,
@@ -149,10 +151,8 @@ const inputButtonModuleMap = {
 };
 
 const Setting = ({ formData, onFormDataChange }) => {
-  // const throttledOnFormDataChange = useCallback(
-  //   throttle((newData) => onFormDataChange(newData), 200), // Adjust the debounce delay as needed
-  //   [onFormDataChange]
-  // );
+  const [isVisible, setIsVisible] = useState(true);
+  const toggleVisibility = () => setIsVisible((prev) => !prev);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -256,16 +256,21 @@ const Setting = ({ formData, onFormDataChange }) => {
 
       case "toggle":
         return (
-          <IconButton
-            onClick={handleToggle}
+          <Switch
             size="small"
-            sx={{
-              borderRadius: "50%",
-              padding: "0.125rem",
-            }}
-          >
-            {formData.waveDisplay ? <ToggleOnIcon /> : <ToggleOffIcon />}
-          </IconButton>
+            // checked={importData.isImage}
+            onChange={handleToggle}
+          />
+          // <IconButton
+          //   onClick={handleToggle}
+          //   size="small"
+          //   sx={{
+          //     borderRadius: "50%",
+          //     padding: "0.125rem",
+          //   }}
+          // >
+          //   {formData.waveDisplay ? <ToggleOnIcon /> : <ToggleOffIcon />}
+          // </IconButton>
         );
       default:
         return null;
@@ -300,7 +305,8 @@ const Setting = ({ formData, onFormDataChange }) => {
           <WaveSection
             key={input.title}
             waveArr={formData.waveArr}
-            onSubmit={handleWaveSubmit}
+            // onSubmit={handleWaveSubmit}
+            onChange={handleWaveSubmit}
           />
         );
       case "import":
@@ -320,16 +326,23 @@ const Setting = ({ formData, onFormDataChange }) => {
   return (
     <div
       id="setting"
-      className="fixed top-0 w-1/3 min-w-72 rounded-xl p-2.5 m-2.5 text-sm z-10 backdrop-blur bg-stone-200/50"
+      className={`fixed top-0 w-1/3 min-w-72 
+      ${
+        isVisible ? "left-0" : "-left-[calc(90vw/3)]"
+      } 
+      ${
+        isVisible ? "rounded-[1.5rem]" : "rounded-[1.5rem]"
+      } p-2.5 m-2.5
+               text-sm z-10 backdrop-blur bg-stone-200/50 transition-all duration-300 ease-in-out`}
     >
       <div className="flex justify-between items-center content-center">
-        <IconButton>
+        <Switch label="Dark Mode" size="small" />
+        <IconButton onClick={toggleVisibility}>
           <ExpandCircleDownRoundedIcon />
         </IconButton>
-
-        <Switch label="Dark Mode" size="small" />
       </div>
-      {Object.entries(inputSectionMap).map(([section, inputs]) => (
+      <CollapseWrapper isVisible={isVisible}>{
+        Object.entries(inputSectionMap).map(([section, inputs]) => (
         <CollapsibleSection
           key={section}
           title={section.charAt(0).toUpperCase() + section.slice(1)}
@@ -337,7 +350,8 @@ const Setting = ({ formData, onFormDataChange }) => {
         >
           {inputs.map((input) => renderInput(input))}
         </CollapsibleSection>
-      ))}
+        ))}
+      </CollapseWrapper>
     </div>
   );
 };

@@ -2,6 +2,7 @@ import React, { useState, useCallback } from "react";
 import Setting from "./Setting";
 import About from "./About";
 import P5Canvas from "../components/elements/P5Canvas";
+// import ToggleInteractive from "./ToggleInteractive";
 // import P5Canvas from "../components/elements/P5Canvas";
 
 //TODO: reset button,
@@ -10,6 +11,11 @@ import P5Canvas from "../components/elements/P5Canvas";
 //TODO: mouse listener that bound to only the canvas but not the whole screen
 
 const Dashboard = () => {
+
+  // const [formVisible, setFormVisible] = useState(true);
+
+  // const toggleVisibility = () => setFormVisible((prev) => !prev);
+
   const [formData, setFormData] = useState({
     tileX: 20,
     tileY: 64,
@@ -42,7 +48,9 @@ const Dashboard = () => {
   return (
     <div className="relative flex mx-auto w-full max-w-screen p-2.5 ">
       <About />
-      <Setting formData={formData} onFormDataChange={handleFormDataChange} />
+
+      {/* TODO: conditional */}
+      <Setting formData={formData} onFormDataChange={handleFormDataChange}/>
       {/* <Render/> */}
       <P5Canvas data={formData} />
     </div>

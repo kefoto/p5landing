@@ -25,11 +25,16 @@ const max_waves = 2;
 
 //TODO: there are lots of bugs here
 //TODO: toggle effect on
-const WaveSection = ({ waveArr = [], onSubmit }) => {
+const WaveSection = ({ waveArr = [], onChange}) => {
   const [waves, setWaves] = useState([...waveArr]);
   const [alertVisible, setAlertVisible] = useState(false);
   const [waveIdCounter, setWaveIdCounter] = useState(waves.length);
 
+
+  const updateWave = (updated) => {
+    setWaves(updated)
+    onChange(updated)
+  }
   const handleAddWave = () => {
     if (waves.length >= max_waves) {
       return;
@@ -51,7 +56,7 @@ const WaveSection = ({ waveArr = [], onSubmit }) => {
       isVisible: true,
     };
     const updatedWaves = [...hiddenWaves, newWave];
-    setWaves(updatedWaves);
+    updateWave(updatedWaves);
     setWaveIdCounter(waveIdCounter + 1);
 
     if (updatedWaves.length >= max_waves) {
@@ -60,7 +65,7 @@ const WaveSection = ({ waveArr = [], onSubmit }) => {
   };
 
   const handleRemoveWave = (id) => {
-    setWaves(waves.filter((wave) => wave.id !== id));
+    updateWave(waves.filter((wave) => wave.id !== id));
 
     setAlertVisible(false);
   };
@@ -69,7 +74,7 @@ const WaveSection = ({ waveArr = [], onSubmit }) => {
     const updatedWaves = waves.map((wave) =>
       wave.id === id ? { ...wave, [field]: value } : wave
     );
-    setWaves(updatedWaves);
+    updateWave(updatedWaves);
   };
 
   const handleToggleChange = (id, newToggles) => {
@@ -85,12 +90,12 @@ const WaveSection = ({ waveArr = [], onSubmit }) => {
       }
       return wave;
     });
-    setWaves(updatedWaves);
+    updateWave(updatedWaves);
   };
 
-  const handleSubmit = () => {
-    onSubmit(waves);
-  };
+  // const handleSubmit = () => {
+  //   onSubmit(waves);
+  // };
 
   return (
     <div>
@@ -104,13 +109,14 @@ const WaveSection = ({ waveArr = [], onSubmit }) => {
           onToggleChange={handleToggleChange}
         />
       ))}
-      <div className="flex items-center content-center justify-between pt-1.5 px-1.5">
+      <div className="flex items-center content-center justify-end pt-1.5 px-1.5">
         {/* <div className="flex justify-center"> */}
         <Tooltip
           title={alertVisible ? `Maximum ${max_waves} waves allowed` : ""}
           disableHoverListener={!alertVisible}
-          placement="right"
+          placement="left"
           arrow
+          // className="justify-end"
         >
           <span>
             <IconButton
@@ -123,7 +129,7 @@ const WaveSection = ({ waveArr = [], onSubmit }) => {
           </span>
         </Tooltip>
 
-        <IconButton
+        {/* <IconButton
           size="small"
           onClick={handleSubmit}
           sx={{
@@ -135,7 +141,7 @@ const WaveSection = ({ waveArr = [], onSubmit }) => {
               padding: "0.125rem",
             }}
           />
-        </IconButton>
+        </IconButton> */}
       </div>
     </div>
   );

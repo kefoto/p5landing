@@ -6,6 +6,8 @@ import { Tile } from "../../utils/Tile";
 const P5Canvas = ({ data }) => {
   const canvasRef = useRef();
 
+  //TODO: try not to rerender all of the base data:
+  // if the display switch for the element is off, this does not update
   useEffect(() => {
     const {
       tileX: tilesX,
@@ -23,8 +25,12 @@ const P5Canvas = ({ data }) => {
       force,
     } = data;
 
+
     const isImage = display.isImage;
     let tiles = [];
+
+
+
 
     const mousedrag = (p) => {
       let pg;
