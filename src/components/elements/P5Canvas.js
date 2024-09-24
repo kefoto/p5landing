@@ -7,6 +7,8 @@ const P5Canvas = ({ data }) => {
   const canvasRef = useRef();
 
   //TODO: try not to rerender all of the base data:
+  //TODO: try to update the canvas based on the screen
+  //TODO: try to set up the image properly
   // if the display switch for the element is off, this does not update
   useEffect(() => {
     const {

@@ -40,7 +40,6 @@ const Dashboard = () => {
   // );
   // Function to handle form data change
   const handleFormDataChange = (newData) => {
-    // throttledSetFormData(newData);
     setFormData(newData);
     console.log(newData);
   };
@@ -52,6 +51,7 @@ const Dashboard = () => {
       {/* TODO: conditional */}
       <Setting formData={formData} onFormDataChange={handleFormDataChange}/>
       {/* <Render/> */}
+
       <P5Canvas data={formData} />
     </div>
   );

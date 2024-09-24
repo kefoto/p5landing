@@ -9,7 +9,6 @@ const CollapsibleSection = ({ title, children, button_module = null }) => {
   const [isVisible, setIsVisible] = useState(true);
 
   const toggleVisibility = () => setIsVisible((prev) => !prev);
-
   //Button animation
   useEffect(() => {
     gsap.to(iconRef.current, {
