@@ -29,7 +29,7 @@ const Dashboard = () => {
     radius: 120,
     waveDisplay: false,
     waveArr: [],
-    importData: { text: "Hello", image: "../../1.JPG", isImage: false },
+    importData: { text: "Hello", image: null, url: null, isImage: false },
   });
 
   // const throttledSetFormData = useCallback(

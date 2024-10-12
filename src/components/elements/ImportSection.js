@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Switch, Button, TextField, IconButton, Chip } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Switch, TextField, IconButton, Chip } from "@mui/material";
 import DoneRoundedIcon from "@mui/icons-material/DoneRounded";
 import UploadIcon from "@mui/icons-material/Upload";
 import CollapseWidthWrapper from "../wrapper/CollapseWidthWrapper";
@@ -10,8 +10,8 @@ const ImportSection = ({ imports, onSubmit }) => {
   const handleImportChange = (event) => {
     const newboolean = event.target.checked;
     setImportData((prevData) => ({
-      ...prevData, 
-      isImage: newboolean, 
+      ...prevData,
+      isImage: newboolean,
     }));
 
     // console.log(newboolean);
@@ -20,7 +20,7 @@ const ImportSection = ({ imports, onSubmit }) => {
   const handleTextChange = (event) => {
     const newText = event.target.value;
     setImportData((prevData) => ({
-      ...prevData, 
+      ...prevData,
       text: newText,
     }));
   };
@@ -29,7 +29,7 @@ const ImportSection = ({ imports, onSubmit }) => {
     const file = event.target.files[0];
     if (file) {
       setImportData((prevData) => ({
-        ...prevData, 
+        ...prevData,
         image: file,
       }));
     }
@@ -40,6 +40,24 @@ const ImportSection = ({ imports, onSubmit }) => {
       onSubmit(importData);
     }
   };
+
+  useEffect(() => {
+    if (importData.image) {
+      const fileURL = URL.createObjectURL(importData.image);
+
+      setImportData((prevData) => ({
+        ...prevData,
+        url: fileURL,
+      }));
+
+      // Cleanup URL to avoid memory leaks
+      return () => {
+        URL.revokeObjectURL(fileURL);
+      };
+    }
+  }, [importData.image]);
+
+  const hasImage = !!importData?.image;
 
   return (
     <div className="w-full">
@@ -75,19 +93,22 @@ const ImportSection = ({ imports, onSubmit }) => {
                   <UploadIcon />
                 </IconButton>
               </label>
+
               <CollapseWidthWrapper
-                isVisible={importData.image.name}
-                keyProp={importData.image.name}
+                isVisible={hasImage}
+                keyProp={hasImage ? importData.image.name : "empty"}
               >
-                <Chip
-                  label={importData.image.name}
-                  variant="outlined"
-                  size="small"
-                  sx={{
-                    padding: "0.125rem",
-                    whiteSpace: "nowrap",
-                  }}
-                />
+                {hasImage && (
+                  <Chip
+                    label={importData.image.name}
+                    variant="outlined"
+                    size="small"
+                    sx={{
+                      padding: "0.125rem",
+                      whiteSpace: "nowrap",
+                    }}
+                  />
+                )}
               </CollapseWidthWrapper>
             </div>
           ) : (

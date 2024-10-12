@@ -9,16 +9,6 @@ import {
 const CollapseWidthWrapper = ({ isVisible, children, keyProp }) => {
   const nodeRef = useRef(null);
 
-  // const [currentKey, setCurrentKey] = useState(keyProp);
-  // const [isAnimating, setIsAnimating] = useState(false);
-
-  // useEffect(() => {
-  //   if (keyProp !== currentKey && !isAnimating) {
-  //     // Trigger the exit animation first
-  //     setIsAnimating(true);
-  //   }
-  // }, [keyProp, currentKey, isAnimating]);
-
   return (
     // <TransitionGroup>
     //   {isVisible && (
@@ -42,10 +32,6 @@ const CollapseWidthWrapper = ({ isVisible, children, keyProp }) => {
                 opacity: 1,
                 duration: 0.4,
                 ease: "power2.out",
-                // onComplete: () => {
-                //   gsap.set(nodeRef.current, { width: "auto", overflow: "visible" });
-                //   setIsAnimating(false); // Animation is complete
-                // }
               })
               .play();
           }}

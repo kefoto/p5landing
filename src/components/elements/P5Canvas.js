@@ -3,6 +3,8 @@ import p5 from "p5";
 import { Tile } from "../../utils/Tile";
 //TODO: should I create my own mouse hooK?
 //TODO: really laggy
+
+//TODO: reload in sections of the data with matching things
 const P5Canvas = ({ data }) => {
   const canvasRef = useRef();
 
@@ -21,14 +23,12 @@ const P5Canvas = ({ data }) => {
       radius: collisionRadius,
       friction,
       ease,
-      importData: display,
+      importData: { isImage, text, url},
       waveArr: waveArrays,
       waveDisplay,
       force,
     } = data;
 
-
-    const isImage = display.isImage;
     let tiles = [];
 
 
@@ -97,7 +97,7 @@ const P5Canvas = ({ data }) => {
           pg.image(p.img, offsetX * p.windowWidth, offsetY * p.windowHeight);
         } else {
           pg.text(
-            display.text,
+            text,
             (offsetX * p.windowWidth) / 2,
             (offsetY * p.windowHeight) / 2
           );
