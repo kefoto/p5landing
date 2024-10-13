@@ -333,7 +333,7 @@ const Setting = ({ formData, onFormDataChange }) => {
       ${
         isVisible ? "rounded-[1.5rem]" : "rounded-[1.5rem]"
       } p-2.5 m-2.5
-               text-sm z-10 backdrop-blur bg-stone-200/50 transition-all duration-300 ease-in-out`}
+               select-none text-sm z-10 backdrop-blur bg-stone-200/50 transition-all duration-300 ease-in-out`}
     >
       <div className="flex justify-between items-center content-center">
         <Switch label="Dark Mode" size="small" />

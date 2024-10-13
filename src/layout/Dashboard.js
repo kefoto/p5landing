@@ -1,17 +1,16 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import Setting from "./Setting";
 import About from "./About";
 import P5Canvas from "../components/elements/P5Canvas";
 // import ToggleInteractive from "./ToggleInteractive";
 // import P5Canvas from "../components/elements/P5Canvas";
-
+import useWindowSize from "../components/hook/useWindowSize";
 //TODO: reset button,
 //TODO: wave switch on and off button,
 //TODO: entire setting on and off button,
 //TODO: mouse listener that bound to only the canvas but not the whole screen
 
 const Dashboard = () => {
-
   // const [formVisible, setFormVisible] = useState(true);
 
   // const toggleVisibility = () => setFormVisible((prev) => !prev);
@@ -32,12 +31,15 @@ const Dashboard = () => {
     importData: { text: "Hello", image: null, url: null, isImage: false },
   });
 
+  const screenSize = useWindowSize();
+
   // const throttledSetFormData = useCallback(
   //   throttle((newData) => {
   //     setFormData((prevData) => ({ ...prevData, ...newData }));
   //   }, 400),
   //   []
   // );
+
   // Function to handle form data change
   const handleFormDataChange = (newData) => {
     setFormData(newData);
@@ -45,15 +47,14 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="relative flex mx-auto w-full max-w-screen p-2.5 ">
-      <About />
+      <div className="relative flex mx-auto w-full max-w-screen overflow-hidden overflow-y-hidden">
+        <About />
 
-      {/* TODO: conditional */}
-      <Setting formData={formData} onFormDataChange={handleFormDataChange}/>
-      {/* <Render/> */}
-
-      <P5Canvas data={formData} />
-    </div>
+        {/* TODO: conditional */}
+        <Setting formData={formData} onFormDataChange={handleFormDataChange} />
+        {/* <Render/> */}
+        <P5Canvas data={formData} screenSize={screenSize} />
+      </div>
   );
 };
 

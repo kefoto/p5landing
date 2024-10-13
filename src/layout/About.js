@@ -44,7 +44,7 @@ const About = () => {
       </div>
       <CollapseWrapper isVisible={isVisible}>
         <div id="gutter" className="relative flex w-full pt-2"></div>
-          <p className="flex text-center">A silly little Kinetic Typography website by Ke Xu</p>
+          <p className="px-4 flex text-center">A silly little Kinetic Typography website by Ke Xu</p>
       </CollapseWrapper>
     </div>
   );

@@ -1,17 +1,24 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import p5 from "p5";
 import { Tile } from "../../utils/Tile";
 //TODO: should I create my own mouse hooK?
 //TODO: really laggy
 
 //TODO: reload in sections of the data with matching things
-const P5Canvas = ({ data }) => {
-  const canvasRef = useRef();
+const P5Canvas = ({ data, screenSize}) => {
+  const canvasRef = useRef(null);
 
-  //TODO: try not to rerender all of the base data:
-  //TODO: try to update the canvas based on the screen
-  //TODO: try to set up the image properly
-  // if the display switch for the element is off, this does not update
+  const p5InstanceRef = useRef(null);
+  const mousedragRef = useRef(mousedragFunc);
+  // const tilesRef = useRef([]);
+  // const pgRef = useRef(null);
+  // const [prevMouse, setPrevMouse] = useState({ x: 0, y: 0 });
+
+  // //TODO: try not to rerender all of the base data:
+  // //TODO: try to update the canvas based on the screen
+  // //TODO: try to set up the image properly
+  // // if the display switch for the element is off, this does not update
+
   useEffect(() => {
     const {
       tileX: tilesX,
@@ -31,12 +38,9 @@ const P5Canvas = ({ data }) => {
 
     let tiles = [];
 
-
-
-
     const mousedrag = (p) => {
       let pg;
-      let canvasSize;
+      // let canvasSize;
       let prevMouseX, prevMouseY;
 
       if (isImage) {
@@ -44,6 +48,7 @@ const P5Canvas = ({ data }) => {
           p.img = p.loadImage("./1.JPG");
         };
       }
+
       const computeWave = (waveArrays, dis, frameCount) => {
         if (!waveArrays) return [0, 0, 0, 0];
 
@@ -79,15 +84,14 @@ const P5Canvas = ({ data }) => {
       };
 
       p.setup = () => {
-        canvasSize = p.min(p.windowWidth, p.windowHeight);
+        // canvasSize = p.min(screenSize.width, screenSize.height);
+        p.createCanvas(screenSize.width, screenSize.height);
 
-        p.createCanvas(p.windowWidth, p.windowHeight);
-
-        pg = p.createGraphics(p.windowWidth, p.windowHeight);
+        pg = p.createGraphics(screenSize.width, screenSize.height);
 
         pg.background(255);
         pg.fill(0);
-        pg.textSize(canvasSize / 4);
+        pg.textSize(p.min(screenSize.width, screenSize.height) / 4);
         pg.push();
         pg.translate(p.width / 2, p.height / 2);
         pg.textAlign(p.CENTER, p.CENTER);
@@ -186,9 +190,9 @@ const P5Canvas = ({ data }) => {
     return () => {
       p5Instance.remove();
     };
-  }, [data]);
+  }, [data, screenSize]);
 
-  return <div ref={canvasRef} className="-z-10"></div>;
+  return <div ref={canvasRef} className="p-0 m-0 -z-10 w-full max-h-full"></div>;
 };
 
 export default P5Canvas;
