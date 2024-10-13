@@ -1,8 +1,8 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef,  } from "react";
 import gsap from "gsap";
 import {
   Transition,
-  TransitionGroup,
+  // TransitionGroup,
   SwitchTransition,
 } from "react-transition-group";
 

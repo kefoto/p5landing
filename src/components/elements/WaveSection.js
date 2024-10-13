@@ -17,8 +17,6 @@ import {
   Tooltip,
 } from "@mui/material";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
-import DoneRoundedIcon from "@mui/icons-material/DoneRounded";
-
 import Wave from "./Wave";
 
 const max_waves = 2;

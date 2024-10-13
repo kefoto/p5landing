@@ -22,7 +22,7 @@ const P5Canvas = ({ data }) => {
 
   useEffect(() => {
     dataRef.current = data;
-    console.log(dataRef.current)
+    console.log(dataRef.current);
     // screenSizeRef.current = screenSize;
     // updateTiles();
   }, [data]);
@@ -32,8 +32,11 @@ const P5Canvas = ({ data }) => {
       let pg;
       let prevMouseX, prevMouseY;
 
+      const text = dataRef.current.importData.text
+      const url = dataRef.current.importData.url
+          ? dataRef.current.importData.url
+          : "./1.JPG";
       if (dataRef.current.isImage) {
-        const url =  dataRef.current.importData.url ? dataRef.current.importData.url : "./1.JPG";
         p.preload = () => {
           p.img = p.loadImage(
             url,
@@ -115,7 +118,7 @@ const P5Canvas = ({ data }) => {
             // pg.image(p.img, 0, 0);
             // console.log(p.img);
           } else {
-            pg.text(dataRef.current.importData.text, 0, 0);
+            pg.text(text, 0, 0);
           }
 
           pg.pop();
@@ -183,7 +186,7 @@ const P5Canvas = ({ data }) => {
             dataRef.current.radius,
             dataRef.current.friction,
             dataRef.current.ease,
-            dataRef.current.force,
+            dataRef.current.force
           );
 
           tile.update2(
@@ -237,6 +240,28 @@ const P5Canvas = ({ data }) => {
         // pg.translate(p.windowWidth / 2, p.windowHeight / 2);
         // p.reset();
       };
+
+      const isClickable = dataRef.current.isClickable;
+      if (isClickable) {
+        p.mousePressed = () => {
+          tilesRef.current.forEach((tile) => {
+            tile.warp(p.width, p.height);
+            // tile.moveTo(p.mouseX, p.mouseY, 1);
+            tile.changeOrigin(p.mouseX, p.mouseY);
+          });
+        };
+
+        p.mouseReleased = () => {
+          tilesRef.current.forEach((tile) => {
+            // tile.moveTo(p.mouseX, p.mouseY, 0.10);
+            tile.resetOrigin();
+          });
+        };
+      } else {
+        p.mousePressed = () => {};
+
+        p.mouseReleased = () => {};
+      }
     };
 
     p5InstanceRef.current = new p5(mousedrag, canvasRef.current);
@@ -247,9 +272,10 @@ const P5Canvas = ({ data }) => {
   }, [
     dataRef.current.importData.text,
     dataRef.current.importData.url,
-    dataRef.current.isImage
+    dataRef.current.isImage,
   ]);
 
+  //TODO: issue, I have to click twice for submit, it just did not rerender right
   useEffect(() => {
     if (p5InstanceRef.current) {
       const p = p5InstanceRef.current;
@@ -314,6 +340,34 @@ const P5Canvas = ({ data }) => {
     }
   }, [dataRef.current.scaleX, dataRef.current.scaleY]);
 
+  //TODO: this is pretty buggy
+  useEffect(() => {
+    if (p5InstanceRef.current) {
+      const p = p5InstanceRef.current;
+      const isClickable = dataRef.current.isClickable;
+      if (isClickable) {
+        p.mousePressed = () => {
+          tilesRef.current.forEach((tile) => {
+            tile.warp(p.width, p.height);
+            // tile.moveTo(p.mouseX, p.mouseY, 1);
+            tile.changeOrigin(p.mouseX, p.mouseY);
+          });
+        };
+
+        p.mouseReleased = () => {
+          tilesRef.current.forEach((tile) => {
+            // tile.moveTo(p.mouseX, p.mouseY, 0.10);
+            tile.resetOrigin();
+          });
+        };
+      } else {
+        p.mousePressed = () => {};
+        p.mouseReleased = () => {};
+      }
+      // p5InstanceRef.current = p
+    }
+
+  }, [dataRef.current.isClickable]);
 
   return <div ref={canvasRef} className="-z-10 w-full max-h-full"></div>;
 };

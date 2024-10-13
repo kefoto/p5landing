@@ -1,4 +1,4 @@
-import { Switch, IconButton } from "@mui/material";
+import { Switch, IconButton, Tooltip } from "@mui/material";
 import React, { useState } from "react";
 
 // import throttle from "lodash/debounce";
@@ -12,8 +12,6 @@ import MultiSliderInput from "../components/elements/inputs/MultiSliderInput";
 import ExpandCircleDownRoundedIcon from "@mui/icons-material/ExpandCircleDownRounded";
 import ImportSection from "../components/elements/ImportSection";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import ToggleOffIcon from "@mui/icons-material/ToggleOff";
-import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 
 import CollapseWrapper from "../components/wrapper/CollapseWrapper";
 /**
@@ -172,6 +170,7 @@ const Setting = ({ formData, onFormDataChange }) => {
     });
   };
 
+
   const handleWaveSubmit = (waveArr) => {
     onFormDataChange({
       ...formData,
@@ -184,6 +183,15 @@ const Setting = ({ formData, onFormDataChange }) => {
     onFormDataChange({
       ...formData,
       waveDisplay: !formData.waveDisplay,
+    });
+  };
+
+
+  const handleClickable = () => {
+    // Toggle logic here, for example, switch between two states
+    onFormDataChange({
+      ...formData,
+      isClickable: !formData.isClickable,
     });
   };
 
@@ -325,30 +333,27 @@ const Setting = ({ formData, onFormDataChange }) => {
   return (
     <div
       id="setting"
-      className={`fixed top-0 w-1/3 min-w-72 
-      ${
-        isVisible ? "left-0" : "-left-[calc(90vw/3)]"
-      } 
-      ${
-        isVisible ? "rounded-[1.5rem]" : "rounded-[1.5rem]"
-      } p-2.5 m-2.5
-               select-none text-sm z-10 backdrop-blur bg-stone-200/50 transition-all duration-300 ease-in-out`}
+      className={`fixed top-0 w-1/4 min-w-72 
+      ${isVisible ? "left-0" : "-left-[calc(70vw/4)]"} 
+      ${isVisible ? "rounded-[1.25rem]" : "rounded-[1.5rem]"} p-2.5 m-2.5
+               select-none text-sm z-10 backdrop-blur-lg bg-stone-200/50 transition-all duration-300 ease-in-out`}
     >
       <div className="flex justify-between items-center content-center">
-        <Switch label="Dark Mode" size="small" />
+
+          <Switch label="Mouse Click effect" size="small" onChange={handleClickable} />
         <IconButton onClick={toggleVisibility}>
           <ExpandCircleDownRoundedIcon />
         </IconButton>
       </div>
-      <CollapseWrapper isVisible={isVisible}>{
-        Object.entries(inputSectionMap).map(([section, inputs]) => (
-        <CollapsibleSection
-          key={section}
-          title={section.charAt(0).toUpperCase() + section.slice(1)}
-          button_module={renderButton(inputButtonModuleMap[section])}
-        >
-          {inputs.map((input) => renderInput(input))}
-        </CollapsibleSection>
+      <CollapseWrapper isVisible={isVisible}>
+        {Object.entries(inputSectionMap).map(([section, inputs]) => (
+          <CollapsibleSection
+            key={section}
+            title={section.charAt(0).toUpperCase() + section.slice(1)}
+            button_module={renderButton(inputButtonModuleMap[section])}
+          >
+            {inputs.map((input) => renderInput(input))}
+          </CollapsibleSection>
         ))}
       </CollapseWrapper>
     </div>

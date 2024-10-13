@@ -28,18 +28,13 @@ const Dashboard = () => {
     radius: 120,
     waveDisplay: false,
     waveArr: [],
-    importData: { text: "Hello", image: null, url: null,},
+    importData: { text: "Hello.", image: null, url: null,},
     isImage: false,
+    isClickable: false,
   });
 
   const screenSize = useWindowSize();
 
-  // const throttledSetFormData = useCallback(
-  //   throttle((newData) => {
-  //     setFormData((prevData) => ({ ...prevData, ...newData }));
-  //   }, 400),
-  //   []
-  // );
 
   // Function to handle form data change
   const handleFormDataChange = (newData) => {
