@@ -1,51 +1,50 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import p5 from "p5";
 import { Tile } from "../../utils/Tile";
-//TODO: should I create my own mouse hooK?
-//TODO: really laggy
 
-//TODO: reload in sections of the data with matching things
-const P5Canvas = ({ data, screenSize}) => {
+const P5Canvas = ({ data }) => {
   const canvasRef = useRef(null);
 
   const p5InstanceRef = useRef(null);
-  const mousedragRef = useRef(mousedragFunc);
-  // const tilesRef = useRef([]);
-  // const pgRef = useRef(null);
-  // const [prevMouse, setPrevMouse] = useState({ x: 0, y: 0 });
+  const tilesRef = useRef([]);
+  const pgRef = useRef(null);
+  // const prevMouseRef = useRef({ x: 0, y: 0 });
 
+  // Refs for data that may change
+  const dataRef = useRef(data);
+
+  // TODO:Scale io not working
   // //TODO: try not to rerender all of the base data:
   // //TODO: try to update the canvas based on the screen
   // //TODO: try to set up the image properly
+  //TODO: pg. size is not working
   // // if the display switch for the element is off, this does not update
 
   useEffect(() => {
-    const {
-      tileX: tilesX,
-      tileY: tilesY,
-      scaleX,
-      scaleY,
-      offsetX,
-      offsetY,
-      radius: collisionRadius,
-      friction,
-      ease,
-      importData: { isImage, text, url},
-      waveArr: waveArrays,
-      waveDisplay,
-      force,
-    } = data;
+    dataRef.current = data;
+    console.log(dataRef.current)
+    // screenSizeRef.current = screenSize;
+    // updateTiles();
+  }, [data]);
 
-    let tiles = [];
-
+  useEffect(() => {
     const mousedrag = (p) => {
       let pg;
-      // let canvasSize;
       let prevMouseX, prevMouseY;
 
-      if (isImage) {
+      if (dataRef.current.isImage) {
+        const url =  dataRef.current.importData.url ? dataRef.current.importData.url : "./1.JPG";
         p.preload = () => {
-          p.img = p.loadImage("./1.JPG");
+          p.img = p.loadImage(
+            url,
+            () => {
+              console.log("Image loaded");
+              drawOnPG(pgRef.current);
+            },
+            (err) => {
+              console.error("Failed to load image", err);
+            }
+          );
         };
       }
 
@@ -73,7 +72,7 @@ const P5Canvas = ({ data, screenSize}) => {
       const getWaveFunction = (type) => {
         switch (type) {
           case "sin":
-            return (value) => p.sin(value); // Ensure p is used as the context
+            return (value) => p.sin(value);
           case "cos":
             return (value) => p.cos(value);
           case "tan":
@@ -83,52 +82,79 @@ const P5Canvas = ({ data, screenSize}) => {
         }
       };
 
-      p.setup = () => {
-        // canvasSize = p.min(screenSize.width, screenSize.height);
-        p.createCanvas(screenSize.width, screenSize.height);
+      const drawOnPG = (pg) => {
+        if (p.windowWidth && p.windowHeight) {
+          pg.clear(); // Clear the previous drawings
 
-        pg = p.createGraphics(screenSize.width, screenSize.height);
+          pg.background(255);
+          pg.fill(0);
+          pg.textSize(p.min(p.windowWidth, p.windowHeight) / 4);
+          pg.translate(p.windowWidth / 2, p.windowHeight / 2);
+          pg.textAlign(p.CENTER, p.CENTER);
+          pg.push();
+          pg.scale(dataRef.current.scaleX, dataRef.current.scaleY);
 
-        pg.background(255);
-        pg.fill(0);
-        pg.textSize(p.min(screenSize.width, screenSize.height) / 4);
-        pg.push();
-        pg.translate(p.width / 2, p.height / 2);
-        pg.textAlign(p.CENTER, p.CENTER);
-        pg.scale(scaleX, scaleY);
+          if (dataRef.current.isImage) {
+            // Fallback to canvas size if image dimensions are not available
+            // p.imageMode(p.CENTER)
 
-        if (isImage) {
-          pg.image(p.img, offsetX * p.windowWidth, offsetY * p.windowHeight);
-        } else {
-          pg.text(
-            text,
-            (offsetX * p.windowWidth) / 2,
-            (offsetY * p.windowHeight) / 2
-          );
+            if (!p.img || !p.img.width) {
+              pg.text("Loading...", 0, 0); // Fallback message
+            } else {
+              const imgWidth = p.img.width;
+              const imgHeight = p.img.height;
+              pg.image(
+                p.img,
+                -imgWidth / 2,
+                -imgHeight / 2,
+                imgWidth,
+                imgHeight
+              );
+            }
+
+            // pg.image(p.img, 0, 0);
+            // console.log(p.img);
+          } else {
+            pg.text(dataRef.current.importData.text, 0, 0);
+          }
+
+          pg.pop();
         }
-        // pg.translate(p.width / 2, p.height / 2);
-        // pg.push();
+      };
 
-        // p.frameRate(30);
+      p.setup = () => {
+        p.createCanvas(p.windowWidth, p.windowHeight);
+        pg = p.createGraphics(p.windowWidth, p.windowHeight);
+        pgRef.current = pg;
+
+        drawOnPG(pg);
 
         prevMouseX = p.mouseX;
         prevMouseY = p.mouseY;
 
-        // let targetX = p.width / 2;
-        // let targetY = p.height / 2;
+        tilesRef.current = [];
 
-        let tileW = p.int(p.width / tilesX);
-        let tileH = p.int(p.height / tilesY);
+        let tileW = p.int(p.windowWidth / dataRef.current.tileX);
+        let tileH = p.int(p.windowHeight / dataRef.current.tileY);
 
-        for (let i = 0; i < tilesX * tilesY; i++) {
-          const x = i % tilesX;
-          const y = Math.floor(i / tilesX);
-          const tile = new Tile(x, y, tileW, tileH, force);
-          tiles.push(tile);
+        for (
+          let i = 0;
+          i < dataRef.current.tileX * dataRef.current.tileY;
+          i++
+        ) {
+          const x = i % dataRef.current.tileX;
+          const y = Math.floor(i / dataRef.current.tileX);
+          const tile = new Tile(x, y, tileW, tileH);
+          tilesRef.current.push(tile);
         }
       };
+
       p.draw = () => {
         p.background(255);
+
+        // if (pgRef.current) {
+        //   drawOnPG(pgRef.current);
+        // }
 
         let moveX = p.mouseX - prevMouseX;
         let moveY = p.mouseY - prevMouseY;
@@ -136,29 +162,44 @@ const P5Canvas = ({ data, screenSize}) => {
         prevMouseX = p.mouseX;
         prevMouseY = p.mouseY;
 
-        tiles.forEach((tile) => {
-          tile.update(p.mouseX, p.mouseY, collisionRadius, friction, ease);
+        tilesRef.current.forEach((tile) => {
+          let dis = p.dist(p.width / 2, p.height / 2, tile.dx, tile.dy);
+
+          if (dataRef.current.waveArr && dataRef.current.waveDisplay) {
+            const resultArray = computeWave(
+              dataRef.current.waveArr,
+              dis,
+              p.frameCount
+            );
+            tile.wave(resultArray);
+          } else {
+            tile.updateSize();
+            // tile.reset();
+          }
+
+          tile.update(
+            p.mouseX,
+            p.mouseY,
+            dataRef.current.radius,
+            dataRef.current.friction,
+            dataRef.current.ease,
+            dataRef.current.force,
+          );
+
           tile.update2(
             moveX,
             moveY,
             p.mouseX,
             p.mouseY,
-            collisionRadius,
-            friction,
-            ease
+            dataRef.current.radius,
+            dataRef.current.friction,
+            dataRef.current.ease
           );
 
-          let dis = p.dist(p.width / 2, p.height / 2, tile.dx, tile.dy);
-
-          if (waveArrays && waveDisplay) {
-            const resultArray = computeWave(waveArrays, dis, p.frameCount);
-            tile.wave(resultArray);
-          }
-
           p.copy(
-            pg,
-            tile.sx,
-            tile.sy,
+            pgRef.current,
+            tile.sx + (dataRef.current.offsetX * p.windowWidth) / 2,
+            tile.sy + (dataRef.current.offsetY * p.windowHeight) / 2,
             tile.sw,
             tile.sh,
             tile.dx,
@@ -169,30 +210,112 @@ const P5Canvas = ({ data, screenSize}) => {
         });
       };
 
-      // p.mousePressed = () => {
-      //   tiles.forEach((tile) => {
-      //     tile.warp(p.width, p.height);
-      //     // tile.moveTo(p.mouseX, p.mouseY, 1);
-      //     tile.changeOrigin(p.mouseX, p.mouseY);
-      //   });
-      // };
+      p.windowResized = () => {
+        p.resizeCanvas(p.windowWidth, p.windowHeight);
 
-      // p.mouseReleased = () => {
-      //   tiles.forEach((tile) => {
-      //     // tile.moveTo(p.mouseX, p.mouseY, 0.10);
-      //     tile.resetOrigin();
-      //   });
-      // };
+        // pg.resizeCanvas(p.windowWidth, p.windowHeight);
+        let pg = p.createGraphics(p.windowWidth, p.windowHeight);
+        pgRef.current = pg;
+        // console.log(pg)
+        drawOnPG(pg);
+
+        tilesRef.current = [];
+
+        let tileW = p.int(p.windowWidth / dataRef.current.tileX);
+        let tileH = p.int(p.windowHeight / dataRef.current.tileY);
+
+        for (
+          let i = 0;
+          i < dataRef.current.tileX * dataRef.current.tileY;
+          i++
+        ) {
+          const x = i % dataRef.current.tileX;
+          const y = Math.floor(i / dataRef.current.tileX);
+          const tile = new Tile(x, y, tileW, tileH);
+          tilesRef.current.push(tile);
+        }
+        // pg.translate(p.windowWidth / 2, p.windowHeight / 2);
+        // p.reset();
+      };
     };
 
-    const p5Instance = new p5(mousedrag, canvasRef.current);
+    p5InstanceRef.current = new p5(mousedrag, canvasRef.current);
 
     return () => {
-      p5Instance.remove();
+      p5InstanceRef.current.remove();
     };
-  }, [data, screenSize]);
+  }, [
+    dataRef.current.importData.text,
+    dataRef.current.importData.url,
+    dataRef.current.isImage
+  ]);
 
-  return <div ref={canvasRef} className="p-0 m-0 -z-10 w-full max-h-full"></div>;
+  useEffect(() => {
+    if (p5InstanceRef.current) {
+      const p = p5InstanceRef.current;
+      // const pg = pgRef.current;
+
+      let pg = p.createGraphics(p.windowWidth, p.windowHeight);
+      pgRef.current = pg;
+      // console.log(pg)
+      pg.clear(); // Clear the previous drawings
+
+      pg.background(255);
+      pg.fill(0);
+      pg.textSize(p.min(p.windowWidth, p.windowHeight) / 4);
+      pg.translate(p.windowWidth / 2, p.windowHeight / 2);
+      pg.textAlign(p.CENTER, p.CENTER);
+      pg.push();
+      pg.scale(dataRef.current.scaleX, dataRef.current.scaleY);
+
+      if (dataRef.current.isImage) {
+        // Fallback to canvas size if image dimensions are not available
+        // p.imageMode(p.CENTER)
+
+        if (!p.img || !p.img.width) {
+          pg.text("Loading...", 0, 0); // Fallback message
+        } else {
+          const imgWidth = p.img.width;
+          const imgHeight = p.img.height;
+          pg.image(p.img, -imgWidth / 2, -imgHeight / 2, imgWidth, imgHeight);
+        }
+
+        // pg.image(p.img, 0, 0);
+        // console.log(p.img);
+      } else {
+        pg.text(dataRef.current.importData.text, 0, 0);
+      }
+
+      pg.pop();
+    }
+  }, [dataRef.current.scaleX, dataRef.current.scaleY]);
+
+  useEffect(() => {
+    if (p5InstanceRef.current) {
+      const p = p5InstanceRef.current;
+      tilesRef.current = [];
+
+      let tileW = p.int(p.width / dataRef.current.tileX);
+      let tileH = p.int(p.height / dataRef.current.tileY);
+
+      for (let i = 0; i < dataRef.current.tileX * dataRef.current.tileY; i++) {
+        const x = i % dataRef.current.tileX;
+        const y = Math.floor(i / dataRef.current.tileX);
+        const tile = new Tile(x, y, tileW, tileH);
+        tilesRef.current.push(tile);
+      }
+    }
+  }, [dataRef.current.tileX, dataRef.current.tileY]);
+
+  useEffect(() => {
+    if (pgRef.current) {
+      const pg = pgRef.current;
+      pg.scale(dataRef.current.scaleX, dataRef.current.scaleY);
+    }
+  }, [dataRef.current.scaleX, dataRef.current.scaleY]);
+
+
+  return <div ref={canvasRef} className="-z-10 w-full max-h-full"></div>;
 };
 
 export default P5Canvas;

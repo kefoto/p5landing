@@ -28,7 +28,8 @@ const Dashboard = () => {
     radius: 120,
     waveDisplay: false,
     waveArr: [],
-    importData: { text: "Hello", image: null, url: null, isImage: false },
+    importData: { text: "Hello", image: null, url: null,},
+    isImage: false,
   });
 
   const screenSize = useWindowSize();
@@ -43,7 +44,7 @@ const Dashboard = () => {
   // Function to handle form data change
   const handleFormDataChange = (newData) => {
     setFormData(newData);
-    console.log(newData);
+    // console.log(newData);
   };
 
   return (

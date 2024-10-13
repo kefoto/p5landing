@@ -216,6 +216,13 @@ const Setting = ({ formData, onFormDataChange }) => {
     });
   };
 
+  const handleImportChange = (newBoolean) => {
+    onFormDataChange({
+      ...formData,
+      isImage: newBoolean,
+    });
+  };
+
   const renderButton = (type) => {
     switch (type) {
       case "reset1":
@@ -261,16 +268,6 @@ const Setting = ({ formData, onFormDataChange }) => {
             // checked={importData.isImage}
             onChange={handleToggle}
           />
-          // <IconButton
-          //   onClick={handleToggle}
-          //   size="small"
-          //   sx={{
-          //     borderRadius: "50%",
-          //     padding: "0.125rem",
-          //   }}
-          // >
-          //   {formData.waveDisplay ? <ToggleOnIcon /> : <ToggleOffIcon />}
-          // </IconButton>
         );
       default:
         return null;
@@ -315,6 +312,8 @@ const Setting = ({ formData, onFormDataChange }) => {
             key={input.title}
             imports={formData.importData}
             onSubmit={handleImportSubmit}
+            onImageToggle={handleImportChange}
+            isImage={formData.isImage}
           />
         );
       default:

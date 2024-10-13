@@ -47,7 +47,7 @@ const WaveSection = ({ waveArr = [], onChange}) => {
       id: waveIdCounter + 1,
       type: "sin",
       freq: 1,
-      amp: 1,
+      amp: 5,
       speed: 0.02,
       x: true,
       y: false,

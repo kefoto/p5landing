@@ -160,9 +160,9 @@ const Wave = ({ wave, index, onRemove, onWaveChange, onToggleChange }) => {
                 size="small"
                 value={wave.freq || 0.1}
                 onChange={(e, value) => onWaveChange(wave.id, "freq", value)}
-                min={0.01}
-                max={0.1}
-                step={0.01}
+                min={0.001}
+                max={1}
+                step={0.001}
               />
             </div>
           </div>
@@ -172,11 +172,11 @@ const Wave = ({ wave, index, onRemove, onWaveChange, onToggleChange }) => {
             <div className="flex flex-grow w-[65%]">
               <IOSSlider
                 size="small"
-                value={wave.amp || 1}
+                value={wave.amp || 10}
                 onChange={(e, value) => onWaveChange(wave.id, "amp", value)}
-                min={-10}
-                max={10}
-                step={0.1}
+                min={-20}
+                max={20}
+                step={0.01}
               />
             </div>
           </div>
@@ -188,9 +188,9 @@ const Wave = ({ wave, index, onRemove, onWaveChange, onToggleChange }) => {
                 size="small"
                 value={wave.speed || 0.1}
                 onChange={(e, value) => onWaveChange(wave.id, "speed", value)}
-                min={0.01}
+                min={0.001}
                 max={0.5}
-                step={0.01}
+                step={0.001}
               />
             </div>
           </div>

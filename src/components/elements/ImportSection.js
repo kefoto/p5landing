@@ -4,15 +4,15 @@ import DoneRoundedIcon from "@mui/icons-material/DoneRounded";
 import UploadIcon from "@mui/icons-material/Upload";
 import CollapseWidthWrapper from "../wrapper/CollapseWidthWrapper";
 
-const ImportSection = ({ imports, onSubmit }) => {
+const ImportSection = ({ imports, onSubmit, isImage, onImageToggle }) => {
   const [importData, setImportData] = useState(imports);
 
+  // useEffect(() => {
+
+  // }, [importData]);
   const handleImportChange = (event) => {
-    const newboolean = event.target.checked;
-    setImportData((prevData) => ({
-      ...prevData,
-      isImage: newboolean,
-    }));
+    const newBoolean = event.target.checked;
+    onImageToggle(newBoolean);
 
     // console.log(newboolean);
   };
@@ -35,7 +35,10 @@ const ImportSection = ({ imports, onSubmit }) => {
     }
   };
 
+
+  //TODO: don't know why I have to click twice????
   const handleSubmit = () => {
+    // event.preventDefault();
     if (importData) {
       onSubmit(importData);
     }
@@ -65,7 +68,7 @@ const ImportSection = ({ imports, onSubmit }) => {
       <div className="relative flex w-full pb-1.5 justify-between items-center content-center pr-1.5">
         <Switch
           size="small"
-          checked={importData.isImage}
+          checked={isImage}
           onChange={handleImportChange}
           sx={{
             transform: "rotate(270deg)", // Rotate 90 degrees
@@ -76,7 +79,7 @@ const ImportSection = ({ imports, onSubmit }) => {
           }}
         />
         <div className="flex flex-shrink-0 w-[60%] h-20 justify-center items-center">
-          {importData.isImage ? (
+          {isImage ? (
             <div className="flex flex-shrink-0 w-full  justify-center items-center space-x-2">
               <label htmlFor="upload-image">
                 <input
@@ -94,6 +97,8 @@ const ImportSection = ({ imports, onSubmit }) => {
                 </IconButton>
               </label>
 
+
+{/* TODO: chip sizing when there is a lot of letters */}
               <CollapseWidthWrapper
                 isVisible={hasImage}
                 keyProp={hasImage ? importData.image.name : "empty"}
