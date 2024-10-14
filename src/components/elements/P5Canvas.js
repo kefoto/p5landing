@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, { useRef, useEffect} from "react";
 import p5 from "p5";
 import { Tile } from "../../utils/Tile";
 import useSpacebar from "../hook/useSpacebar";
@@ -14,22 +14,11 @@ const P5Canvas = ({ data }) => {
   // Refs for data that may change
   const dataRef = useRef(data);
 
+  //to be quickly updated in frontend, since the reference is a bit slower
   const {
-    // ease,
-    // force,
-    // friction,
     isClickable,
     isImage,
-    // offsetX,
-    // offsetY,
-    // radius,
-    // scaleX,
-    // scaleY,
-    // tileX,
-    // tileY,
     importData,
-    // waveArr,
-    // waveDisplay
   } = data;
   //TODO: offset is not working, the offset of image works for destination but not edit the original picture
   // //TODO: try to update the canvas based on the screen

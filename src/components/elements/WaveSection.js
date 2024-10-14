@@ -1,19 +1,7 @@
 import React, { useState } from "react";
 
 import {
-  // Slider,
   IconButton,
-  // FormControl,
-  // FormGroup,
-  // FormControlLabel,
-  // Checkbox,
-  // Typography,
-  // Box,
-  // Grid,
-  // Paper,
-  // Button,
-  // ToggleButton,
-  // ToggleButtonGroup,
   Tooltip,
 } from "@mui/material";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
