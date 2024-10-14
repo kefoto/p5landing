@@ -5,8 +5,6 @@ import P5Canvas from "../components/elements/P5Canvas";
 // import ToggleInteractive from "./ToggleInteractive";
 // import P5Canvas from "../components/elements/P5Canvas";
 import useWindowSize from "../components/hook/useWindowSize";
-//TODO: reset button,
-//TODO: wave switch on and off button,
 //TODO: entire setting on and off button,
 //TODO: mouse listener that bound to only the canvas but not the whole screen
 

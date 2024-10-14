@@ -35,8 +35,6 @@ const ImportSection = ({ imports, onSubmit, isImage, onImageToggle }) => {
     }
   };
 
-
-  //TODO: don't know why I have to click twice????
   const handleSubmit = () => {
     // event.preventDefault();
     if (importData) {
@@ -97,15 +95,17 @@ const ImportSection = ({ imports, onSubmit, isImage, onImageToggle }) => {
                 </IconButton>
               </label>
 
-
-{/* TODO: chip sizing when there is a lot of letters */}
               <CollapseWidthWrapper
                 isVisible={hasImage}
                 keyProp={hasImage ? importData.image.name : "empty"}
               >
                 {hasImage && (
                   <Chip
-                    label={importData.image.name}
+                    label={
+                      importData.image.name.length > 14
+                        ? `${importData.image.name.slice(0, 14)}...`
+                        : importData.image.name
+                    }
                     variant="outlined"
                     size="small"
                     sx={{

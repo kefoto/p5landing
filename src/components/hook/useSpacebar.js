@@ -1,23 +1,44 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
-const useSpacebar = () => {
-  const [Spacebar, setSpacebar] = useState(false);
+const useSpacebar = (p5InstanceRef) => {
+  const [spacebar, setSpacebar] = useState(false);
+
+  
+  const handleKeyDown = useCallback((e) => {
+    const p = p5InstanceRef.current
+
+    if (!p) {
+      console.log("p5 instance is not yet initialized");
+      return;
+    }
+    
+    if (e.keyCode === 32) { // 32 is the keycode for spacebar
+      e.preventDefault();  // Prevent the default spacebar action
+
+      
+      if (p) {
+        if (!spacebar) {
+          p.noLoop();  // Stop p5 loop
+        } else {
+          p.loop();    // Resume p5 loop
+        }
+      }
+
+      setSpacebar((prev) => !prev);
+
+       // Toggle spacebar state
+    }
+  }, [spacebar, p5InstanceRef]);
 
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.code === "Space") {
-        setSpacebar((prev) => !prev); // Toggle pause state
-      }
-    };
-
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keydown", handleKeyDown); // Cleanup on unmount
     };
-  }, []);
+  }, [handleKeyDown]);
 
-  return Spacebar;
+  return spacebar;
 };
 
 

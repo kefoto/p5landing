@@ -18,7 +18,7 @@ const About = () => {
       className={`fixed bottom-0 w-1/3 min-w-64 
     ${isVisible ? "right-0" : "-right-[calc(70vw/4)]"} 
     ${isVisible ? "rounded-[1.25rem]" : "rounded-[1.5rem]"} p-2.5 m-2.5
-             text-sm z-10 backdrop-blur-lg bg-stone-200/50 transition-all duration-300 ease-in-out`}
+             font-mono text-sm z-10 backdrop-blur-lg bg-stone-200/50 transition-all duration-300 ease-in-out`}
     >
       <div id="title" className="flex items-center justify-between">
         <div className="flex justify-end space-x-2 items-center">

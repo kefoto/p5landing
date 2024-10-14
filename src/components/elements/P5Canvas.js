@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import p5 from "p5";
 import { Tile } from "../../utils/Tile";
+import useSpacebar from "../hook/useSpacebar";
 
 const P5Canvas = ({ data }) => {
   const canvasRef = useRef(null);
@@ -13,13 +14,29 @@ const P5Canvas = ({ data }) => {
   // Refs for data that may change
   const dataRef = useRef(data);
 
-  // TODO:Scale io not working
-  // //TODO: try not to rerender all of the base data:
+  const {
+    // ease,
+    // force,
+    // friction,
+    isClickable,
+    isImage,
+    // offsetX,
+    // offsetY,
+    // radius,
+    // scaleX,
+    // scaleY,
+    // tileX,
+    // tileY,
+    importData,
+    // waveArr,
+    // waveDisplay
+  } = data;
+  //TODO: offset is not working, the offset of image works for destination but not edit the original picture
   // //TODO: try to update the canvas based on the screen
-  // //TODO: try to set up the image properly
   //TODO: pg. size is not working
   // // if the display switch for the element is off, this does not update
 
+  useSpacebar(p5InstanceRef);
   useEffect(() => {
     dataRef.current = data;
     console.log(dataRef.current);
@@ -32,11 +49,9 @@ const P5Canvas = ({ data }) => {
       let pg;
       let prevMouseX, prevMouseY;
 
-      const text = dataRef.current.importData.text
-      const url = dataRef.current.importData.url
-          ? dataRef.current.importData.url
-          : "./1.JPG";
-      if (dataRef.current.isImage) {
+      const text = importData.text;
+      const url = importData.url ? importData.url : "./1.JPG";
+      if (isImage) {
         p.preload = () => {
           p.img = p.loadImage(
             url,
@@ -97,7 +112,7 @@ const P5Canvas = ({ data }) => {
           pg.push();
           pg.scale(dataRef.current.scaleX, dataRef.current.scaleY);
 
-          if (dataRef.current.isImage) {
+          if (isImage) {
             // Fallback to canvas size if image dimensions are not available
             // p.imageMode(p.CENTER)
 
@@ -108,17 +123,21 @@ const P5Canvas = ({ data }) => {
               const imgHeight = p.img.height;
               pg.image(
                 p.img,
-                -imgWidth / 2,
-                -imgHeight / 2,
+                -imgWidth / 2 + (dataRef.current.offsetX * p.windowWidth) / 2,
+                -imgHeight / 2 + (dataRef.current.offsetY * p.windowHeight) / 2,
                 imgWidth,
                 imgHeight
               );
             }
 
-            // pg.image(p.img, 0, 0);
             // console.log(p.img);
           } else {
-            pg.text(text, 0, 0);
+
+            pg.text(
+              text,
+              (dataRef.current.offsetX * p.windowWidth) / 2,
+              (dataRef.current.offsetY * p.windowHeight) / 2
+            );
           }
 
           pg.pop();
@@ -154,10 +173,6 @@ const P5Canvas = ({ data }) => {
 
       p.draw = () => {
         p.background(255);
-
-        // if (pgRef.current) {
-        //   drawOnPG(pgRef.current);
-        // }
 
         let moveX = p.mouseX - prevMouseX;
         let moveY = p.mouseY - prevMouseY;
@@ -201,8 +216,8 @@ const P5Canvas = ({ data }) => {
 
           p.copy(
             pgRef.current,
-            tile.sx + (dataRef.current.offsetX * p.windowWidth) / 2,
-            tile.sy + (dataRef.current.offsetY * p.windowHeight) / 2,
+            tile.sx,
+            tile.sy,
             tile.sw,
             tile.sh,
             tile.dx,
@@ -241,6 +256,16 @@ const P5Canvas = ({ data }) => {
         // p.reset();
       };
 
+      // p.keyPressed = () => {
+      //   if (p.keyCode === 32) {  // Spacebar key code
+      //     if (p.isLooping()) {
+      //       p.noLoop();
+      //     } else {
+      //       p.loop();
+      //     }
+      //   }
+      // };
+
       const isClickable = dataRef.current.isClickable;
       if (isClickable) {
         p.mousePressed = () => {
@@ -269,13 +294,8 @@ const P5Canvas = ({ data }) => {
     return () => {
       p5InstanceRef.current.remove();
     };
-  }, [
-    dataRef.current.importData.text,
-    dataRef.current.importData.url,
-    dataRef.current.isImage,
-  ]);
+  }, [importData.text, importData.url, isImage]);
 
-  //TODO: issue, I have to click twice for submit, it just did not rerender right
   useEffect(() => {
     if (p5InstanceRef.current) {
       const p = p5InstanceRef.current;
@@ -296,25 +316,33 @@ const P5Canvas = ({ data }) => {
 
       if (dataRef.current.isImage) {
         // Fallback to canvas size if image dimensions are not available
-        // p.imageMode(p.CENTER)
+
 
         if (!p.img || !p.img.width) {
           pg.text("Loading...", 0, 0); // Fallback message
         } else {
           const imgWidth = p.img.width;
           const imgHeight = p.img.height;
-          pg.image(p.img, -imgWidth / 2, -imgHeight / 2, imgWidth, imgHeight);
+          pg.image(
+            p.img,
+            -imgWidth / 2 + (dataRef.current.offsetX * p.windowWidth) / 2,
+            -imgHeight / 2 + (dataRef.current.offsetY * p.windowHeight) / 2,
+            imgWidth,
+            imgHeight
+          );
         }
-
-        // pg.image(p.img, 0, 0);
         // console.log(p.img);
       } else {
-        pg.text(dataRef.current.importData.text, 0, 0);
+        pg.text(
+          dataRef.current.importData.text,
+          (dataRef.current.offsetX * p.windowWidth) / 2,
+          (dataRef.current.offsetY * p.windowHeight) / 2
+        );
       }
 
       pg.pop();
     }
-  }, [dataRef.current.scaleX, dataRef.current.scaleY]);
+  }, [dataRef.current.scaleX, dataRef.current.scaleY, dataRef.current.offsetX, dataRef.current.offsetY]);
 
   useEffect(() => {
     if (p5InstanceRef.current) {
@@ -344,7 +372,6 @@ const P5Canvas = ({ data }) => {
   useEffect(() => {
     if (p5InstanceRef.current) {
       const p = p5InstanceRef.current;
-      const isClickable = dataRef.current.isClickable;
       if (isClickable) {
         p.mousePressed = () => {
           tilesRef.current.forEach((tile) => {
@@ -364,10 +391,8 @@ const P5Canvas = ({ data }) => {
         p.mousePressed = () => {};
         p.mouseReleased = () => {};
       }
-      // p5InstanceRef.current = p
     }
-
-  }, [dataRef.current.isClickable]);
+  }, [isClickable]);
 
   return <div ref={canvasRef} className="-z-10 w-full max-h-full"></div>;
 };

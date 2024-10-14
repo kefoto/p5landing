@@ -1,6 +1,6 @@
 import { Switch, IconButton, Tooltip } from "@mui/material";
 import React, { useState } from "react";
-
+import { useTheme } from "@mui/material/styles";
 // import throttle from "lodash/debounce";
 import CollapsibleSection from "../components/elements/CollapsibleSection";
 import WaveSection from "../components/elements/WaveSection";
@@ -13,7 +13,10 @@ import ExpandCircleDownRoundedIcon from "@mui/icons-material/ExpandCircleDownRou
 import ImportSection from "../components/elements/ImportSection";
 import RefreshIcon from "@mui/icons-material/Refresh";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import CollapseWrapper from "../components/wrapper/CollapseWrapper";
+import { faMousePointer } from "@fortawesome/free-solid-svg-icons/faMousePointer";
 /**
  * fundamental updates after change,
  * but waves updates after submit,
@@ -149,8 +152,10 @@ const inputButtonModuleMap = {
 };
 
 const Setting = ({ formData, onFormDataChange }) => {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible((prev) => !prev);
+
+  const theme = useTheme();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -170,7 +175,6 @@ const Setting = ({ formData, onFormDataChange }) => {
     });
   };
 
-
   const handleWaveSubmit = (waveArr) => {
     onFormDataChange({
       ...formData,
@@ -185,7 +189,6 @@ const Setting = ({ formData, onFormDataChange }) => {
       waveDisplay: !formData.waveDisplay,
     });
   };
-
 
   const handleClickable = () => {
     // Toggle logic here, for example, switch between two states
@@ -329,7 +332,6 @@ const Setting = ({ formData, onFormDataChange }) => {
     }
   };
 
-  //TODO: add hide button,
   return (
     <div
       id="setting"
@@ -339,8 +341,25 @@ const Setting = ({ formData, onFormDataChange }) => {
                select-none text-sm z-10 backdrop-blur-lg bg-stone-200/50 transition-all duration-300 ease-in-out`}
     >
       <div className="flex justify-between items-center content-center">
+        <div className="flex justify-between items-center content-center space-x-2">
+          <Switch
+            label="Mouse Click Interaction"
+            size="small"
+            onChange={handleClickable}
+          />
+          <Tooltip
+            title={"Click Interaction"}
+            placement="right"
+            arrow
+            // className="justify-end"
+          >
+            <FontAwesomeIcon
+              icon={faMousePointer}
+              style={{ color: theme.palette.action.active }}
+            />
+          </Tooltip>
+        </div>
 
-          <Switch label="Mouse Click effect" size="small" onChange={handleClickable} />
         <IconButton onClick={toggleVisibility}>
           <ExpandCircleDownRoundedIcon />
         </IconButton>
