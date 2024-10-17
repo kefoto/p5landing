@@ -28,7 +28,7 @@ const P5Canvas = ({ data }) => {
   useSpacebar(p5InstanceRef);
   useEffect(() => {
     dataRef.current = data;
-    console.log(dataRef.current);
+    // console.log(dataRef.current);
     // screenSizeRef.current = screenSize;
     // updateTiles();
   }, [data]);

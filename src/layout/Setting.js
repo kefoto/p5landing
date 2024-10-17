@@ -169,33 +169,33 @@ const Setting = ({ formData, onFormDataChange }) => {
       }
     }
 
-    onFormDataChange({
-      ...formData,
+    onFormDataChange((prevFormData) =>({
+      ...prevFormData,
       [name]: value,
-    });
+    }));
   };
 
   const handleWaveSubmit = (waveArr) => {
-    onFormDataChange({
-      ...formData,
+    onFormDataChange((prevFormData) =>({
+      ...prevFormData,
       waveArr,
-    });
+    }));
   };
 
   const handleToggle = () => {
     // Toggle logic here, for example, switch between two states
-    onFormDataChange({
-      ...formData,
-      waveDisplay: !formData.waveDisplay,
-    });
+    onFormDataChange((prevFormData) =>({
+      ...prevFormData,
+      waveDisplay: !prevFormData.waveDisplay,
+    }));
   };
 
   const handleClickable = () => {
     // Toggle logic here, for example, switch between two states
-    onFormDataChange({
-      ...formData,
+    onFormDataChange((prevFormData) =>({
+      ...prevFormData,
       isClickable: !formData.isClickable,
-    });
+    }));
   };
 
   const handleBaseReset = () => {
@@ -221,17 +221,17 @@ const Setting = ({ formData, onFormDataChange }) => {
   };
 
   const handleImportSubmit = (importData) => {
-    onFormDataChange({
-      ...formData,
+    onFormDataChange((prevFormData) => ({
+      ...prevFormData,
       importData,
-    });
+    }));
   };
 
   const handleImportChange = (newBoolean) => {
-    onFormDataChange({
-      ...formData,
+    onFormDataChange((prevFormData) => ({
+      ...prevFormData,
       isImage: newBoolean,
-    });
+    }));
   };
 
   const renderButton = (type) => {
