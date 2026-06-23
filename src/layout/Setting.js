@@ -15,7 +15,6 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import CollapseWrapper from "../components/wrapper/CollapseWrapper";
 import { faMousePointer } from "@fortawesome/free-solid-svg-icons/faMousePointer";
 /**
  * fundamental updates after change,
@@ -335,13 +334,18 @@ const Setting = ({ formData, onFormDataChange }) => {
   return (
     <div
       id="setting"
-      className={`fixed top-0 w-1/4 min-w-72 
-      ${isVisible ? "left-0" : "-left-[calc(70vw/4)]"} 
-      ${isVisible ? "rounded-[1.25rem]" : "rounded-[1.5rem]"} p-2.5 m-2.5
-               select-none text-sm z-10 backdrop-blur-lg bg-stone-200/50 transition-all duration-300 ease-in-out`}
+      className={`fixed top-0 left-0 p-2.5 m-2.5
+               select-none text-sm z-10 backdrop-blur-lg bg-stone-200/50
+               overflow-hidden
+               transition-[width,border-radius] duration-300 ease-in-out
+               ${isVisible ? "w-72 rounded-[1.25rem]" : "w-[3.75rem] rounded-[1.5rem]"}`}
     >
-      <div className="flex justify-between items-center content-center">
-        <div className="flex justify-between items-center content-center space-x-2">
+      <div className="flex items-center justify-between">
+        <div
+          className={`flex-1 min-w-0 flex items-center space-x-2 overflow-hidden transition-[max-width,opacity] duration-300 ease-in-out ${
+            isVisible ? "max-w-[20rem] opacity-100" : "max-w-0 opacity-0 pointer-events-none"
+          }`}
+        >
           <Switch
             label="Mouse Click Interaction"
             size="small"
@@ -351,7 +355,6 @@ const Setting = ({ formData, onFormDataChange }) => {
             title={"Click Interaction"}
             placement="right"
             arrow
-            // className="justify-end"
           >
             <FontAwesomeIcon
               icon={faMousePointer}
@@ -359,12 +362,22 @@ const Setting = ({ formData, onFormDataChange }) => {
             />
           </Tooltip>
         </div>
-
-        <IconButton onClick={toggleVisibility}>
+        <IconButton
+          onClick={toggleVisibility}
+          sx={{
+            flexShrink: 0,
+            transform: isVisible ? "rotate(180deg)" : "rotate(0deg)",
+            transition: "transform 0.3s ease-in-out",
+          }}
+        >
           <ExpandCircleDownRoundedIcon />
         </IconButton>
       </div>
-      <CollapseWrapper isVisible={isVisible}>
+      <div
+        className={`overflow-hidden transition-[max-height] duration-300 ease-in-out ${
+          isVisible ? "max-h-[60rem]" : "max-h-0"
+        }`}
+      >
         {Object.entries(inputSectionMap).map(([section, inputs]) => (
           <CollapsibleSection
             key={section}
@@ -374,7 +387,7 @@ const Setting = ({ formData, onFormDataChange }) => {
             {inputs.map((input) => renderInput(input))}
           </CollapsibleSection>
         ))}
-      </CollapseWrapper>
+      </div>
     </div>
   );
 };

@@ -109,7 +109,7 @@ const Wave = ({ wave, index, onRemove, onWaveChange, onToggleChange }) => {
                 size="small"
                 sx={{
                   display: "flex",
-                  border: "1px solid #000",
+                  border: "1px solid #d3d3d3",
                   flexWrap: "wrap",
                   borderRadius: "2rem",
                   gap: "0.25rem",

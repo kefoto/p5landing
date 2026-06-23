@@ -13,6 +13,9 @@ const WaveToggleButtonGroup = ({ value, onChange }) => {
         }
       }}
       aria-label="wave type"
+      sx={{
+        border: "1px solid #d3d3d3",
+      }}
     >
       <ToggleButton
         value="sin"

@@ -26,7 +26,7 @@ const Dashboard = () => {
     radius: 120,
     waveDisplay: false,
     waveArr: [],
-    importData: { text: "Hello.", image: null, url: null,},
+    importData: { text: "Hello!", image: null, url: null,},
     isImage: false,
     isClickable: false,
   });
